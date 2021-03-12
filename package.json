@@ -1,0 +1,30 @@
+{
+  "name": "character-creator-server-",
+  "version": "0.0.1",
+  "description": "Server part of Character Creator web application",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -r esm app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ulwothar/Character-Creator-server-.git"
+  },
+  "author": "Ulwothar <mateuszkrp@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ulwothar/Character-Creator-server-/issues"
+  },
+  "homepage": "https://github.com/Ulwothar/Character-Creator-server-#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
