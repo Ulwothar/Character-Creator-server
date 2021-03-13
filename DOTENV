@@ -1,0 +1,4 @@
+#change this file name to .env
+
+#database credentials, place your database link after the '='
+DB_URI=

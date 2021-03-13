@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 
+import characterRoutes from './routes/characterRutes';
+
 dotenv.config();
 
 const app = express();
@@ -24,6 +26,12 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+
+app.use('/character', characterRoutes);
+
+app.get('/', (req, res) => {
+  res.send('does it work?');
+});
 
 mongoose
   .connect(DB, connectionSettings)
