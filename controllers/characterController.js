@@ -10,13 +10,41 @@ function getRandomInt(min, max) {
 
 const getCharacterInfo = (character) => {
   let getCharacterInfo = {};
-  character.map((property) => {
-    getCharacterInfo.chcaracterName = property.characterName;
-    getCharacterInfo.characterRace = property.characterRace;
-    getCharacterInfo.characterClass = property.characterClass;
-    getCharacterInfo.characterLevel = property.characterLevel;
-    getCharacterInfo.characterCode = property.characterCode;
-  });
+
+  // if (!character.map()) {
+  //   getCharacterInfo.name = character.characterName;
+  //   getCharacterInfo.race = character.characterRace;
+  //   getCharacterInfo.class = character.characterClass;
+  //   getCharacterInfo.level = character.characterLevel;
+  //   getCharacterInfo.characterCode = character.characterCode;
+  //   getCharacterInfo.character = character.character;
+  //   getCharacterInfo.stats = character.characterStats;
+  //   getCharacterInfo.skills = character.characterSkills;
+
+  //   return getCharacterInfo;
+  // }
+  try {
+    character.map((property) => {
+      getCharacterInfo.name = property.characterName;
+      getCharacterInfo.race = property.characterRace;
+      getCharacterInfo.class = property.characterClass;
+      getCharacterInfo.level = property.characterLevel;
+      getCharacterInfo.characterCode = property.characterCode;
+      getCharacterInfo.character = property.character;
+      getCharacterInfo.stats = property.characterStats;
+      getCharacterInfo.skills = property.characterSkills;
+    });
+  } catch (error) {
+    console.log('adding new character');
+    getCharacterInfo.name = character.characterName;
+    getCharacterInfo.race = character.characterRace;
+    getCharacterInfo.class = character.characterClass;
+    getCharacterInfo.level = character.characterLevel;
+    getCharacterInfo.characterCode = character.characterCode;
+    getCharacterInfo.character = character.character;
+    getCharacterInfo.stats = character.characterStats;
+    getCharacterInfo.skills = character.characterSkills;
+  }
 
   return getCharacterInfo;
 };
@@ -33,7 +61,14 @@ export const addCharacter = async (req, res, next) => {
     );
   }
 
-  const { characterName, characterClass, characterRace } = req.body;
+  const {
+    characterName,
+    characterClass,
+    characterRace,
+    character,
+    characterSkills,
+    characterStats,
+  } = req.body;
 
   const characterLevel = 1;
 
@@ -47,6 +82,9 @@ export const addCharacter = async (req, res, next) => {
     characterClass,
     characterCode,
     characterLevel,
+    character,
+    characterSkills,
+    characterStats,
   });
 
   try {
@@ -59,27 +97,28 @@ export const addCharacter = async (req, res, next) => {
     });
   }
 
-  res
-    .status(201)
-    .json({ message: 'Character created successfuly!', newCharacter });
+  res.status(201).json({
+    message: 'Character created successfuly!',
+    character: getCharacterInfo(newCharacter),
+  });
 };
 
 export const getCharacter = async (req, res, next) => {
   const characterCode = req.params.cc;
 
-  let character;
+  let newCharacter;
 
   try {
-    character = await Character.find({ characterCode: characterCode });
+    newCharacter = await Character.find({ characterCode: characterCode });
   } catch (error) {
     return res.status(500).json({ message: 'Server error, please try again.' });
   }
 
-  if (character.length === 0) {
+  if (newCharacter.length === 0) {
     return res.status(404).json({
-      error: `Character code ${characterCode} does not exists, please check your spelling.`,
+      error: `Character code is invalid, please make sure the code is typed properly.`,
     });
   }
 
-  res.status(200).json({ character: getCharacterInfo(character) });
+  res.status(200).json({ character: getCharacterInfo(newCharacter) });
 };

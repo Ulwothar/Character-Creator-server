@@ -10,6 +10,9 @@ router.post(
   check('characterRace').notEmpty(),
   check('characterClass').notEmpty(),
   check('characterName').notEmpty(),
+  check('character').notEmpty(),
+  check('characterStats').isArray(),
+  check('characterSkills').isArray(),
   addCharacter,
 );
 
