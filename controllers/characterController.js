@@ -11,18 +11,6 @@ function getRandomInt(min, max) {
 const getCharacterInfo = (character) => {
   let getCharacterInfo = {};
 
-  // if (!character.map()) {
-  //   getCharacterInfo.name = character.characterName;
-  //   getCharacterInfo.race = character.characterRace;
-  //   getCharacterInfo.class = character.characterClass;
-  //   getCharacterInfo.level = character.characterLevel;
-  //   getCharacterInfo.characterCode = character.characterCode;
-  //   getCharacterInfo.character = character.character;
-  //   getCharacterInfo.stats = character.characterStats;
-  //   getCharacterInfo.skills = character.characterSkills;
-
-  //   return getCharacterInfo;
-  // }
   try {
     character.map((property) => {
       getCharacterInfo.name = property.characterName;
@@ -115,10 +103,28 @@ export const getCharacter = async (req, res, next) => {
   }
 
   if (newCharacter.length === 0) {
-    return res.status(404).json({
-      error: `Character code is invalid, please make sure the code is typed properly.`,
-    });
+    return next(
+      res.status(404).json({
+        error: `Character code is invalid, please make sure the code is typed properly.`,
+      }),
+    );
   }
 
   res.status(200).json({ character: getCharacterInfo(newCharacter) });
+};
+
+export const deleteCharacter = async (req, res, next) => {
+  const characterCode = req.params.cc;
+
+  try {
+    await Character.deleteOne({ characterCode: characterCode });
+  } catch (error) {
+    return next(
+      res
+        .status(500)
+        .json({ error: 'Server error, could not delete this character.' }),
+    );
+  }
+
+  res.status(200).json({ message: 'Character deleted successfully' });
 };

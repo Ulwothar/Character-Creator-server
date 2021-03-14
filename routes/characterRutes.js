@@ -1,7 +1,11 @@
 import express from 'express';
 import { check } from 'express-validator';
 
-import { addCharacter, getCharacter } from '../controllers/characterController';
+import {
+  addCharacter,
+  deleteCharacter,
+  getCharacter,
+} from '../controllers/characterController';
 
 const router = express.Router();
 
@@ -22,6 +26,6 @@ router.get('/:cc', getCharacter);
 
 router.patch('/:cc');
 
-router.delete('/:cc');
+router.delete('/:cc', deleteCharacter);
 
 export default router;
