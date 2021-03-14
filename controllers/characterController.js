@@ -8,6 +8,19 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
+const getCharacterInfo = (character) => {
+  let getCharacterInfo = {};
+  character.map((property) => {
+    getCharacterInfo.chcaracterName = property.characterName;
+    getCharacterInfo.characterRace = property.characterRace;
+    getCharacterInfo.characterClass = property.characterClass;
+    getCharacterInfo.characterLevel = property.characterLevel;
+    getCharacterInfo.characterCode = property.characterCode;
+  });
+
+  return getCharacterInfo;
+};
+
 export const addCharacter = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -49,4 +62,24 @@ export const addCharacter = async (req, res, next) => {
   res
     .status(201)
     .json({ message: 'Character created successfuly!', newCharacter });
+};
+
+export const getCharacter = async (req, res, next) => {
+  const characterCode = req.params.cc;
+
+  let character;
+
+  try {
+    character = await Character.find({ characterCode: characterCode });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error, please try again.' });
+  }
+
+  if (character.length === 0) {
+    return res.status(404).json({
+      error: `Character code ${characterCode} does not exists, please check your spelling.`,
+    });
+  }
+
+  res.status(200).json({ character: getCharacterInfo(character) });
 };
