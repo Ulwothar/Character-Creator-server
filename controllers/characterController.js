@@ -117,6 +117,19 @@ export const deleteCharacter = async (req, res, next) => {
   const characterCode = req.params.cc;
 
   try {
+    let characterCheck = await Character.findOne({
+      characterCode: characterCode,
+    });
+    if (!characterCheck) {
+      return res.status(404).json({
+        error: 'Character code is invalid, this character does not exist!',
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: 'Server error, please try again.' });
+  }
+
+  try {
     await Character.deleteOne({ characterCode: characterCode });
   } catch (error) {
     return next(
