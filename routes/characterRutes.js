@@ -11,12 +11,12 @@ const router = express.Router();
 
 router.post(
   '/',
-  check('characterRace').notEmpty(),
-  check('characterClass').notEmpty(),
-  check('characterName').notEmpty(),
+  check('race').notEmpty(),
+  check('_class').notEmpty(),
+  check('name').notEmpty(),
   check('character').notEmpty(),
-  check('characterStats').isArray(),
-  check('characterSkills').isArray(),
+  check('stats').isArray(),
+  check('skills').isArray(),
   addCharacter,
 );
 

@@ -13,10 +13,10 @@ const getCharacterInfo = (character) => {
 
   try {
     character.map((property) => {
-      getCharacterInfo.name = property.characterName;
-      getCharacterInfo.race = property.characterRace;
-      getCharacterInfo.class = property.characterClass;
-      getCharacterInfo.level = property.characterLevel;
+      getCharacterInfo.name = property.name;
+      getCharacterInfo.race = property.race;
+      getCharacterInfo.class = property._class;
+      getCharacterInfo.level = property.level;
       getCharacterInfo.characterCode = property.characterCode;
       getCharacterInfo.character = property.character;
       getCharacterInfo.stats = property.characterStats;
@@ -24,14 +24,14 @@ const getCharacterInfo = (character) => {
     });
   } catch (error) {
     console.log('adding new character');
-    getCharacterInfo.name = character.characterName;
-    getCharacterInfo.race = character.characterRace;
-    getCharacterInfo.class = character.characterClass;
-    getCharacterInfo.level = character.characterLevel;
+    getCharacterInfo.name = character.cname;
+    getCharacterInfo.race = character.race;
+    getCharacterInfo.class = character._class;
+    getCharacterInfo.level = character.level;
     getCharacterInfo.characterCode = character.characterCode;
     getCharacterInfo.character = character.character;
-    getCharacterInfo.stats = character.characterStats;
-    getCharacterInfo.skills = character.characterSkills;
+    getCharacterInfo.stats = character.stats;
+    getCharacterInfo.skills = character.skills;
   }
 
   return getCharacterInfo;
@@ -49,30 +49,23 @@ export const addCharacter = async (req, res, next) => {
     );
   }
 
-  const {
-    characterName,
-    characterClass,
-    characterRace,
-    character,
-    characterSkills,
-    characterStats,
-  } = req.body;
+  const { name, _class, race, character, skills, stats } = req.body;
 
-  const characterLevel = 1;
+  const level = 1;
 
-  const name = characterName.slice(0, 4);
+  const cName = name.slice(0, 4);
   const code = getRandomInt(10000, 100000);
-  const characterCode = name + code;
+  const characterCode = cName + code;
 
   const newCharacter = new Character({
-    characterName,
-    characterRace,
-    characterClass,
+    name,
+    race,
+    _class,
     characterCode,
-    characterLevel,
+    level,
     character,
-    characterSkills,
-    characterStats,
+    skills,
+    stats,
   });
 
   try {
