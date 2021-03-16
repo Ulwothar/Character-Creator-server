@@ -3,13 +3,13 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const characterSchema = new Schema({
-  characterName: { type: String, required: true },
-  characterRace: { type: String, required: true },
-  characterClass: { type: String, required: true },
+  name: { type: String, required: true },
+  race: { type: String, required: true },
+  _class: { type: String, required: true },
   characterCode: { type: String, required: true },
-  characterLevel: { type: Number, required: true },
-  characterStats: { type: Array, required: true },
-  characterSkills: { type: Array, required: true },
+  level: { type: Number, required: true },
+  stats: { type: Array, required: true },
+  skills: { type: Array, required: true },
   character: { type: String, required: true },
 });
 
