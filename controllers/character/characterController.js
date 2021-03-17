@@ -1,6 +1,6 @@
 import { validationResult } from 'express-validator';
 
-import Character from '../models/characterModel';
+import Character from '../../models/character/characterModel';
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -134,3 +134,5 @@ export const deleteCharacter = async (req, res, next) => {
 
   res.status(200).json({ message: 'Character deleted successfully' });
 };
+
+export const updateCharacter = async (req, res, next) => {};
