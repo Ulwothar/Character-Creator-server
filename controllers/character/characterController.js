@@ -49,7 +49,7 @@ export const addCharacter = async (req, res, next) => {
     );
   }
 
-  const { name, _class, race, character, skills, stats } = req.body;
+  const { name, _class, race, nature, skills, stats } = req.body;
 
   const level = 1;
 
@@ -63,7 +63,7 @@ export const addCharacter = async (req, res, next) => {
     _class,
     characterCode,
     level,
-    character,
+    nature,
     skills,
     stats,
   });
