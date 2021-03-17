@@ -1,9 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
 
-import characterRoutes from './routes/characterRutes';
+import characterRoutes from './routes/character/characterRutes';
+import characterDataRoutes from './routes/character/characterDataRoutes';
 
 dotenv.config();
 
@@ -25,9 +25,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use('/character', characterRoutes);
+
+app.use('/characterData', characterDataRoutes);
 
 app.get('/', (req, res) => {
   res.send('does it work?');
