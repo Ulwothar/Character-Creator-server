@@ -115,3 +115,30 @@ export const addStat = async (req, res, next) => {
 
   res.status(201).json({ stat: newStat });
 };
+
+export const characterFormData = async (req, res, next) => {
+  let new_Class, newNature, newRace, newSkill, newStat;
+  try {
+    new_Class = await _Class.find({});
+    newNature = await Nature.find({});
+    newRace = await Race.find({});
+    newSkill = await Skill.find({});
+    newStat = await Stat.find({});
+  } catch (error) {
+    console.log(error);
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+
+  console.log(newRace);
+  res
+    .status(200)
+    .json({
+      classes: new_Class,
+      natures: newNature,
+      races: newRace,
+      skills: newSkill,
+      stats: newStat,
+    });
+};

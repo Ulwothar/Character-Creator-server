@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import characterRoutes from './routes/character/characterRutes';
 import characterDataRoutes from './routes/character/characterDataRoutes';
+import formData from './routes/formData/formData';
 
 dotenv.config();
 
@@ -29,7 +30,9 @@ app.use(express.json());
 
 app.use('/character', characterRoutes);
 
-app.use('/characterData', characterDataRoutes);
+app.use('/characterdata', characterDataRoutes);
+
+app.use('/formdata', formData);
 
 app.get('/', (req, res) => {
   res.send('does it work?');

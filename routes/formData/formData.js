@@ -1,10 +1,9 @@
 import express from 'express';
-import { check } from 'express-validator';
 
-import {} from '../controllers/characterController';
+import { characterFormData } from '../../controllers/characterData/characterDataController';
 
 const router = express.Router();
 
-router.get('/character-data');
+router.get('/character', characterFormData);
 
 export default router;
