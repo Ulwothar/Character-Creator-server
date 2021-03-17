@@ -135,4 +135,57 @@ export const deleteCharacter = async (req, res, next) => {
   res.status(200).json({ message: 'Character deleted successfully' });
 };
 
-export const updateCharacter = async (req, res, next) => {};
+export const updateCharacter = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const { param } = errors.errors.find((value) => value.param);
+    console.log(param);
+    return next(
+      res.status(406).json({
+        error: `Invalid inputs, please fill in the ${param} field.`,
+      }),
+    );
+  }
+
+  const {
+    name,
+    _class,
+    race,
+    nature,
+    skills,
+    stats,
+    level,
+    characterCode,
+  } = req.body;
+
+  let updateCharacter;
+  const filter = { characterCode: characterCode };
+  const update = {
+    name: name,
+    _class: _class,
+    race: race,
+    nature: nature,
+    skills: skills,
+    stats: stats,
+    level: level,
+  };
+
+  try {
+    updateCharacter = await Character.findOneAndUpdate(filter, update, {
+      new: true,
+      useFindAndModify: false,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+
+  res
+    .status(200)
+    .json({
+      message: 'Character updated successfully!',
+      character: updateCharacter,
+    });
+};
