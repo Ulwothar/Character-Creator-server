@@ -10,7 +10,7 @@ const characterSchema = new Schema({
   level: { type: Number, required: true },
   stats: { type: Array, required: true },
   skills: { type: Array, required: true },
-  character: { type: String, required: true },
+  nature: { type: String, required: true },
 });
 
 export default mongoose.model('Character', characterSchema);
