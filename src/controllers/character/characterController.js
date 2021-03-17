@@ -51,6 +51,8 @@ export const addCharacter = async (req, res, next) => {
 
   const { name, _class, race, nature, skills, stats } = req.body;
 
+  console.log(name);
+
   const level = 1;
 
   const cName = name.slice(0, 4);
@@ -182,10 +184,8 @@ export const updateCharacter = async (req, res, next) => {
     );
   }
 
-  res
-    .status(200)
-    .json({
-      message: 'Character updated successfully!',
-      character: updateCharacter,
-    });
+  res.status(200).json({
+    message: 'Character updated successfully!',
+    character: updateCharacter,
+  });
 };

@@ -1,12 +1,27 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
-import characterRoutes from './routes/character/characterRutes';
-import characterDataRoutes from './routes/character/characterDataRoutes';
-import formData from './routes/formData/formData';
+import characterRoutes from './src/routes/character/characterRutes';
+import characterDataRoutes from './src/routes/character/characterDataRoutes';
+import formData from './src/routes/formData/formData';
 
 dotenv.config();
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: 'Character Creator API',
+      description: 'Character Creator API Information',
+    },
+    servers: ['http://localhost:4000'],
+  },
+  apis: ['./src/routes/*/*.js'],
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
 const app = express();
 const DB = process.env.DB_URI;
@@ -15,6 +30,8 @@ const connectionSettings = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

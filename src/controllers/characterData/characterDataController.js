@@ -132,13 +132,11 @@ export const characterFormData = async (req, res, next) => {
   }
 
   console.log(newRace);
-  res
-    .status(200)
-    .json({
-      classes: new_Class,
-      natures: newNature,
-      races: newRace,
-      skills: newSkill,
-      stats: newStat,
-    });
+  res.status(200).json({
+    classes: new_Class,
+    natures: newNature,
+    races: newRace,
+    skills: newSkill,
+    stats: newStat,
+  });
 };
