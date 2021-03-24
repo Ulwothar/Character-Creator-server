@@ -5,6 +5,7 @@ import Nature from '../../models/natures/natureModel';
 import Race from '../../models/races/raceModel';
 import Skill from '../../models/skills/skillModel';
 import Stat from '../../models/stats/statModel';
+import School from '../../models/spells/schoolModel';
 
 export const add_Class = async (req, res, next) => {
   const { name, modifiers } = req.body;
@@ -116,14 +117,36 @@ export const addStat = async (req, res, next) => {
   res.status(201).json({ stat: newStat });
 };
 
+export const addSchool = async (req, res, next) => {
+  const { name } = req.body;
+
+  const newSchool = new School({
+    name,
+  });
+
+  try {
+    newSchool.save();
+  } catch (error) {
+    return next(
+      res
+        .status(500)
+        .json({ error: 'Server error, please try again.' })
+        .error(error),
+    );
+  }
+
+  res.status(201).json({ school: newSchool });
+};
+
 export const characterFormData = async (req, res, next) => {
-  let new_Class, newNature, newRace, newSkill, newStat;
+  let new_Class, newNature, newRace, newSkill, newStat, newSchool;
   try {
     new_Class = await _Class.find({});
     newNature = await Nature.find({});
     newRace = await Race.find({});
     newSkill = await Skill.find({});
     newStat = await Stat.find({});
+    newSchool = await School.find({});
   } catch (error) {
     console.log(error);
     return next(
@@ -138,5 +161,6 @@ export const characterFormData = async (req, res, next) => {
     races: newRace,
     skills: newSkill,
     stats: newStat,
+    schools: newSchool,
   });
 };

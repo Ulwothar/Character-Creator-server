@@ -3,6 +3,7 @@ import { check } from 'express-validator';
 import {
   addNature,
   addRace,
+  addSchool,
   addSkill,
   addStat,
   add_Class,
@@ -19,6 +20,8 @@ router.post('/add-race', check('name').notEmpty(), addRace);
 router.post('/add-skill', check('name').notEmpty(), addSkill);
 
 router.post('/add-stat', check('name').notEmpty(), addStat);
+
+router.post('/add-school', check('name').notEmpty(), addSchool);
 
 export default router;
 
@@ -104,6 +107,22 @@ export default router;
  *      '500':
  *        description: Internal server error.
  *
+ * /characterdata/add-school:
+ *  post:
+ *    description: "Create new school of magic"
+ *    produces: "application/json"
+ *    parameters:
+ *    - in: "body"
+ *      name: "School"
+ *      description: "Create new school"
+ *      schema:
+ *        $ref: '#/definitions/school'
+ *    responses:
+ *      '201':
+ *        description: "New school created"
+ *      '500':
+ *        description: "Internal server error"
+ *
  * definitions:
  *  class:
  *    type: object
@@ -141,4 +160,10 @@ export default router;
  *   properties:
  *     name:
  *       type: string
+ *
+ *  school:
+ *    type: object
+ *    properties:
+ *      name:
+ *        type: string
  */

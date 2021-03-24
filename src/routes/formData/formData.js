@@ -4,6 +4,10 @@ import { characterFormData } from '../../controllers/characterData/characterData
 
 const router = express.Router();
 
+router.get('/character', characterFormData);
+
+export default router;
+
 /**
  * @swagger
  * /formdata/character:
@@ -12,7 +16,6 @@ const router = express.Router();
  *      responses:
  *          '200':
  *              description: Loaded character form data
+ *          '500':
+ *              description: Internal server error, please try again
  */
-router.get('/character', characterFormData);
-
-export default router;
