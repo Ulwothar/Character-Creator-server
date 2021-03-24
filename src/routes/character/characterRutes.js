@@ -150,6 +150,7 @@ export default router;
  *        type: string
  *      level:
  *        type: number
+ *        default: 1
  *      stats:
  *        type: array
  *        items:
@@ -158,6 +159,19 @@ export default router;
  *        type: array
  *        items:
  *          type: string
+ *      schools:
+ *          type: array
+ *          items:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *              schoolId:
+ *                type: string
+ *              spells:
+ *                type: array
+ *                items:
+ *                  type: string
  *    required:
  *      - name
  *      - _class
