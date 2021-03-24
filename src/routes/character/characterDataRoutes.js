@@ -26,12 +26,14 @@ export default router;
  * @swagger
  * /characterdata/add-class:
  *  post:
- *    description: Creates new class.
- *    produces: application/json
+ *    description: "Creates new class"
+ *    produces: "application/json"
  *    parameters:
- *      - in: body
- *        schema:
- *          $ref: '#/definitions/class'
+ *    - in: "body"
+ *      name: "Class"
+ *      description: "Creates new class"
+ *      schema:
+ *        $ref: '#/definitions/class'
  *    responses:
  *      '201':
  *        description: New Class Created.
@@ -40,12 +42,14 @@ export default router;
  *
  * /characterdata/add-nature:
  *  post:
- *    description: Creates new nature.
- *    produces: application/json
+ *    description: "Creates new nature"
+ *    produces: "application/json"
  *    parameters:
- *      - in: body
- *        schema:
- *          $ref: '#/definitions/nature'
+ *    - in: "body"
+ *      name: "Nature"
+ *      description: "Creates new nature"
+ *      schema:
+ *        $ref: '#/definitions/nature'
  *    responses:
  *      '201':
  *        description: New nature Created.
@@ -54,12 +58,14 @@ export default router;
  *
  * /characterdata/add-race:
  *  post:
- *    description: Creates new race.
- *    produces: application/json
+ *    description: "Creates new race"
+ *    produces: "application/json"
  *    parameters:
- *      - in: body
- *        schema:
- *          $ref: '#/definitions/race'
+ *    - in: "body"
+ *      name: "Race"
+ *      description: "Creates new race"
+ *      schema:
+ *        $ref: '#/definitions/race'
  *    responses:
  *      '201':
  *        description: New race Created.
@@ -68,12 +74,14 @@ export default router;
  *
  * /characterdata/add-skill:
  *  post:
- *    description: Creates new skill.
- *    produces: application/json
+ *    description: "Creates new skill"
+ *    produces: "application/json"
  *    parameters:
- *      - in: body
- *        schema:
- *          $ref: '#/definitions/skill'
+ *    - in: "body"
+ *      name: "Skill"
+ *      description: "Creates new Skill"
+ *      schema:
+ *        $ref: '#/definitions/skill'
  *    responses:
  *      '201':
  *        description: New skill Created.
@@ -82,12 +90,14 @@ export default router;
  *
  * /characterdata/add-stat:
  *  post:
- *    description: Creates new stat.
- *    produces: application/json
+ *    description: "Creates new stat"
+ *    produces: "application/json"
  *    parameters:
- *      - in: body
- *        schema:
- *          $ref: '#/definitions/stat'
+ *    - in: "body"
+ *      name: "Stat"
+ *      description: "Creates new stat"
+ *      schema:
+ *        $ref: '#/definitions/stat'
  *    responses:
  *      '201':
  *        description: New stat Created.

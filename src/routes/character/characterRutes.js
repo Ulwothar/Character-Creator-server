@@ -47,13 +47,16 @@ export default router;
  *
  * /character:
  *   post:
- *    description: Use to create a new character
- *    produces: application/json
+ *    description: "Use to create a new character"
+ *    consumes: "application/json"
+ *    produces: "application/json"
  *    parameters:
- *      - in: body
- *        schema:
- *          $ref: '#/definitions/newCharacter'
- *   responses:
+ *    - in: "body"
+ *      name: "createCharacter"
+ *      description: "Create new character here"
+ *      schema:
+ *        $ref: '#/definitions/newCharacter'
+ *    responses:
  *      '201':
  *        description: Character created successfully!
  *      '406':
@@ -115,15 +118,18 @@ export default router;
  *
  * /character:
  *   patch:
- *    description: Use to update an existing character
- *    produces: application/json
+ *    description: "Use to update an existing character"
+ *    consumes: "application/json"
+ *    produces: "application/json"
  *    parameters:
- *      - in: body
- *        schema:
- *          $ref: '#/definitions/updatedCharacter'
- *   responses:
+ *    - in: "body"
+ *      name: "updateCharacter"
+ *      description: "Character Update Route"
+ *      schema:
+ *        $ref: '#/definitions/updatedCharacter'
+ *    responses:
  *      '201':
- *        description: Character created successfully!
+ *        description: Character updated successfully!
  *      '406':
  *        description: Invalid inputs.
  *      '500':
