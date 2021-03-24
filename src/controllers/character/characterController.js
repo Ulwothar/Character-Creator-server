@@ -1,6 +1,7 @@
 import { validationResult } from 'express-validator';
 
 import Character from '../../models/character/characterModel';
+import ValidateData from '../../shared/dataValidator';
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -21,10 +22,11 @@ const getCharacterInfo = (character) => {
       getCharacterInfo.character = property.character;
       getCharacterInfo.stats = property.characterStats;
       getCharacterInfo.skills = property.characterSkills;
+      getCharacterInfo.schools = character.schools;
     });
   } catch (error) {
     console.log('adding new character');
-    getCharacterInfo.name = character.cname;
+    getCharacterInfo.name = character.name;
     getCharacterInfo.race = character.race;
     getCharacterInfo.class = character._class;
     getCharacterInfo.level = character.level;
@@ -32,6 +34,7 @@ const getCharacterInfo = (character) => {
     getCharacterInfo.character = character.character;
     getCharacterInfo.stats = character.stats;
     getCharacterInfo.skills = character.skills;
+    getCharacterInfo.schools = character.schools;
   }
 
   return getCharacterInfo;
@@ -39,19 +42,18 @@ const getCharacterInfo = (character) => {
 
 export const addCharacter = async (req, res, next) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const { param } = errors.errors.find((value) => value.param);
-    console.log(param);
+
+  const dataError = ValidateData(errors);
+
+  if (dataError) {
     return next(
       res.status(406).json({
-        error: `Invalid inputs, please fill in the ${param} field.`,
+        error: `Invalid inputs, please fill in the ${dataError} field.`,
       }),
     );
   }
 
-  const { name, _class, race, nature, skills, stats } = req.body;
-
-  console.log(name);
+  const { name, _class, race, nature, skills, stats, schools } = req.body;
 
   const level = 1;
 
@@ -68,6 +70,7 @@ export const addCharacter = async (req, res, next) => {
     nature,
     skills,
     stats,
+    schools,
   });
 
   try {
@@ -139,12 +142,12 @@ export const deleteCharacter = async (req, res, next) => {
 
 export const updateCharacter = async (req, res, next) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const { param } = errors.errors.find((value) => value.param);
-    console.log(param);
+  const dataError = ValidateData(errors);
+
+  if (dataError) {
     return next(
       res.status(406).json({
-        error: `Invalid inputs, please fill in the ${param} field.`,
+        error: `Invalid inputs, please fill in the ${dataError} field.`,
       }),
     );
   }
@@ -158,6 +161,7 @@ export const updateCharacter = async (req, res, next) => {
     stats,
     level,
     characterCode,
+    schools,
   } = req.body;
 
   let updateCharacter;
@@ -170,6 +174,7 @@ export const updateCharacter = async (req, res, next) => {
     skills: skills,
     stats: stats,
     level: level,
+    schools: schools,
   };
 
   try {

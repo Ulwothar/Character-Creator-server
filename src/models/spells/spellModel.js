@@ -6,6 +6,7 @@ const spellSchema = new Schema({
   name: { type: String, required: true },
   cost: { type: Number, required: true },
   schoolId: { type: String, required: true },
+  schoolLevel: { type: Number, required: true },
   description: { type: String, required: true },
   summary: { type: String, required: true },
 });

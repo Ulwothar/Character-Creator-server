@@ -5,6 +5,7 @@ import {
   addRace,
   addSchool,
   addSkill,
+  addSpell,
   addStat,
   add_Class,
 } from '../../controllers/characterData/characterDataController';
@@ -23,6 +24,16 @@ router.post('/add-stat', check('name').notEmpty(), addStat);
 
 router.post('/add-school', check('name').notEmpty(), addSchool);
 
+router.post(
+  '/add-spell',
+  check('name').notEmpty(),
+  check('cost').notEmpty(),
+  check('schoolId').notEmpty(),
+  check('description').notEmpty(),
+  check('summary').notEmpty(),
+  addSpell,
+);
+
 export default router;
 
 /**
@@ -40,6 +51,8 @@ export default router;
  *    responses:
  *      '201':
  *        description: New Class Created.
+ *      '406':
+ *        description: "Invalid inputs"
  *      '500':
  *        description: Internal server error.
  *
@@ -56,6 +69,8 @@ export default router;
  *    responses:
  *      '201':
  *        description: New nature Created.
+ *      '406':
+ *        description: "Invalid inputs"
  *      '500':
  *        description: Internal server error.
  *
@@ -72,6 +87,8 @@ export default router;
  *    responses:
  *      '201':
  *        description: New race Created.
+ *      '406':
+ *        description: "Invalid inputs"
  *      '500':
  *        description: Internal server error.
  *
@@ -88,6 +105,8 @@ export default router;
  *    responses:
  *      '201':
  *        description: New skill Created.
+ *      '406':
+ *        description: "Invalid inputs"
  *      '500':
  *        description: Internal server error.
  *
@@ -104,6 +123,8 @@ export default router;
  *    responses:
  *      '201':
  *        description: New stat Created.
+ *      '406':
+ *        description: "Invalid inputs"
  *      '500':
  *        description: Internal server error.
  *
@@ -120,6 +141,26 @@ export default router;
  *    responses:
  *      '201':
  *        description: "New school created"
+ *      '406':
+ *        description: "Invalid inputs"
+ *      '500':
+ *        description: "Internal server error"
+ *
+ * /characterdata/add-spell:
+ *  post:
+ *    description: "Create new spell"
+ *    produces: "application/json"
+ *    parameters:
+ *    - in: "body"
+ *      name: "Spell"
+ *      description: "Create new spell"
+ *      schema:
+ *        $ref: '#/definitions/spell'
+ *    responses:
+ *      '201':
+ *        description: "New spell created"
+ *      '406':
+ *        description: "Invalid inputs"
  *      '500':
  *        description: "Internal server error"
  *
@@ -165,5 +206,20 @@ export default router;
  *    type: object
  *    properties:
  *      name:
+ *        type: string
+ *
+ *  spell:
+ *    type: object
+ *    properties:
+ *      name:
+ *        type: string
+ *      cost:
+ *        type: integer
+ *        format: int32
+ *      schoolId:
+ *        type: string
+ *      description:
+ *        type: string
+ *      summary:
  *        type: string
  */
