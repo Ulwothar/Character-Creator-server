@@ -53,3 +53,9 @@ POST '/add-spell' - create new spell. The following fields must be provided:
 There is one route here, showing all possible features the character can have (all from section 2).
 
 GET '/character' - returns object with all possible classes, races, natures, skills, stats, schools and spells.
+
+# 3 /api-docs
+
+This is swagger route - documentation of this API. Every route can be checked, used or tested. This route is used for two main reasons:
+- lets you test the API and quickly add items to database.
+- helps front-end people find out how to communicate with this API.
