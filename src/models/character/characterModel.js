@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const schoolsSchema = new Schema({
   name: { type: String, required: true },
   schoolId: { type: String, required: true },
-  spells: [{ type: String }],
+  spellId: [{ type: String }],
 });
 
 const characterSchema = new Schema({

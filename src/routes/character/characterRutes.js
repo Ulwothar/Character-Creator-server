@@ -5,6 +5,7 @@ import {
   addCharacter,
   deleteCharacter,
   getCharacter,
+  levelUp,
   updateCharacter,
 } from '../../controllers/character/characterController';
 
@@ -39,6 +40,13 @@ router.patch(
 );
 
 router.delete('/:cc', deleteCharacter);
+
+router.patch(
+  '/level-up',
+  check('characterCode').notEmpty(),
+  check('level').isNumeric(),
+  levelUp,
+);
 
 export default router;
 
@@ -168,7 +176,7 @@ export default router;
  *                type: string
  *              schoolId:
  *                type: string
- *              spells:
+ *              spellId:
  *                type: array
  *                items:
  *                  type: string
@@ -202,4 +210,34 @@ export default router;
  *        description: Character Code invalid.
  *      '500':
  *        description: Internal server error.
+ */
+
+/**
+ * @swagger
+ * /character/level-up:
+ *  patch:
+ *    description: "Updates character level"
+ *    parameters:
+ *    - in: "body"
+ *      name: "levelUpdate"
+ *      description: "Route used for updating level of character"
+ *      schema:
+ *        $ref: '#/definitions/levelUp'
+ *    responses:
+ *      '201':
+ *        description: "Character level updated"
+ *      '406':
+ *        description: "Invalid inputs, please fill in all required data"
+ *      '500':
+ *        description: "Server error, please try again"
+ * definitions:
+ *  levelUp:
+ *    type: object
+ *    properties:
+ *      characterCode:
+ *        type: string
+ *        required: true
+ *      level:
+ *        type: number
+ *        required: true
  */
