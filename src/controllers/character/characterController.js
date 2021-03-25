@@ -194,3 +194,46 @@ export const updateCharacter = async (req, res, next) => {
     character: updateCharacter,
   });
 };
+
+export const levelUp = async (req, res, next) => {
+  const errors = validationResult(req);
+  const dataError = ValidateData(errors);
+
+  if (dataError) {
+    return next(
+      res.status(406).json({
+        error: `Invalid inputs, please fill in the ${dataError} field.`,
+      }),
+    );
+  }
+
+  const { characterCode, level } = req.body;
+
+  const filter = { characterCode: characterCode };
+
+  const update = { level: level };
+
+  let character;
+  try {
+    character = await Character.findOneAndUpdate(filter, update, {
+      new: true,
+      useFindAndModify: false,
+    });
+    if (!character) {
+      return next(
+        res
+          .status(406)
+          .json({
+            error: 'Could not find this character, please check your data',
+          }),
+      );
+    }
+    console.log(character);
+  } catch (error) {
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+
+  res.status(201).json({ message: 'Level up!' });
+};
