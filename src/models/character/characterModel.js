@@ -17,7 +17,9 @@ const characterSchema = new Schema({
   stats: { type: Array, required: true },
   skills: { type: Array, required: true },
   nature: { type: String, required: true },
-  schools: [{ type: schoolsSchema, default: [] }],
+  schools: [
+    { type: schoolsSchema, default: { name: '', schoolId: '', spellId: [] } },
+  ],
 });
 
 export default mongoose.model('Character', characterSchema);
