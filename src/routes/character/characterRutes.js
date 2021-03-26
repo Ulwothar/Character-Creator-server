@@ -3,6 +3,7 @@ import { check } from 'express-validator';
 
 import {
   addCharacter,
+  addSchool,
   deleteCharacter,
   getCharacter,
   levelUp,
@@ -46,6 +47,14 @@ router.patch(
   check('characterCode').notEmpty(),
   check('level').isNumeric(),
   levelUp,
+);
+
+router.patch(
+  '/add-school',
+  check('name').notEmpty(),
+  check('schoolId').notEmpty(),
+  check('characterCode').notEmpty(),
+  addSchool,
 );
 
 export default router;
@@ -240,4 +249,34 @@ export default router;
  *      level:
  *        type: number
  *        required: true
+ */
+
+/**
+ * @swagger
+ * /character/add-school:
+ *  patch:
+ *    description: "Adds new magic school to selected character"
+ *    parameters:
+ *    - in: "body"
+ *      name: "addSchool"
+ *      description: "Route used to add new magic school to a character"
+ *      schema:
+ *        $ref: '#/definitions/characterSchool'
+ *    responses:
+ *      '201':
+ *        description: "School added successfully"
+ *      '406':
+ *        description: "Invalid inputs"
+ *      '500':
+ *        description: "Server error"
+ * definitions:
+ *  characterSchool:
+ *    type: object
+ *    properties:
+ *      name:
+ *        type: string
+ *      schoolId:
+ *        type: string
+ *      characterCode:
+ *        type: string
  */

@@ -13,16 +13,16 @@ const getCharacterInfo = (character) => {
   let getCharacterInfo = {};
 
   try {
-    character.map((property) => {
+    getCharacterInfo = character.map((property) => {
       getCharacterInfo.name = property.name;
       getCharacterInfo.race = property.race;
       getCharacterInfo.class = property._class;
       getCharacterInfo.level = property.level;
       getCharacterInfo.characterCode = property.characterCode;
-      getCharacterInfo.character = property.character;
+      getCharacterInfo.nature = property.nature;
       getCharacterInfo.stats = property.characterStats;
       getCharacterInfo.skills = property.characterSkills;
-      getCharacterInfo.schools = character.schools;
+      //getCharacterInfo.schools = character.schools;
     });
   } catch (error) {
     console.log('adding new character');
@@ -31,10 +31,10 @@ const getCharacterInfo = (character) => {
     getCharacterInfo.class = character._class;
     getCharacterInfo.level = character.level;
     getCharacterInfo.characterCode = character.characterCode;
-    getCharacterInfo.character = character.character;
+    getCharacterInfo.nature = character.nature;
     getCharacterInfo.stats = character.stats;
     getCharacterInfo.skills = character.skills;
-    getCharacterInfo.schools = character.schools;
+    //getCharacterInfo.schools = character.schools;
   }
 
   return getCharacterInfo;
@@ -108,7 +108,17 @@ export const getCharacter = async (req, res, next) => {
     );
   }
 
-  res.status(200).json({ character: getCharacterInfo(newCharacter) });
+  console.log(
+    newCharacter.map((character) => character.toObject({ getters: true })),
+  );
+
+  res
+    .status(200)
+    .json({
+      character: newCharacter.map((character) =>
+        character.toObject({ getters: true }),
+      ),
+    });
 };
 
 export const deleteCharacter = async (req, res, next) => {
@@ -221,11 +231,9 @@ export const levelUp = async (req, res, next) => {
     });
     if (!character) {
       return next(
-        res
-          .status(406)
-          .json({
-            error: 'Could not find this character, please check your data',
-          }),
+        res.status(406).json({
+          error: 'Could not find this character, please check your data',
+        }),
       );
     }
     console.log(character);
@@ -236,4 +244,57 @@ export const levelUp = async (req, res, next) => {
   }
 
   res.status(201).json({ message: 'Level up!' });
+};
+
+export const addSchool = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  const dataError = ValidateData(errors);
+
+  if (dataError) {
+    return next(
+      res.status(406).json({
+        error: `Invalid inputs, please fill in the ${dataError} field.`,
+      }),
+    );
+  }
+
+  const { name, schoolId, characterCode } = req.body;
+
+  const filter = { characterCode: characterCode };
+
+  try {
+    const updatedCharacter = await Character.findOneAndUpdate(
+      filter,
+      { $push: { schools: { name: name, schoolId: schoolId } } },
+      { new: true, useFindAndModify: false },
+    );
+    console.log(updatedCharacter);
+    res
+      .status(201)
+      .json({ message: 'New school added.', character: updatedCharacter });
+  } catch (error) {
+    console.log(error);
+    return next(res.status(500).json({ error: 'Server error' }));
+  }
+
+  //let newSchool;
+
+  // try {
+  //   newSchool = await Character.find(filter);
+  // } catch (error) {
+  //   return next(res.status(500).json({ error: 'Server error' }));
+  // }
+
+  // newSchool[0].schools.push({
+  //   name: name,
+  //   schoolId: schoolId,
+  // });
+
+  // try {
+  //   await newSchool.save();
+  // } catch (error) {
+  //   console.log(error);
+  //   return next(res.status(500).json({ error: 'Server error' }));
+  // }
 };
