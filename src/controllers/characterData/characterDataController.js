@@ -90,11 +90,20 @@ export const addRace = async (req, res, next) => {
     );
   }
 
-  const { name, modifiers } = req.body;
+  const {
+    name,
+    modifiers,
+    description,
+    specialRules,
+    psychologicalTraits,
+  } = req.body;
 
   const newRace = new Race({
     name,
     modifiers,
+    description,
+    specialRules,
+    psychologicalTraits,
   });
 
   try {
