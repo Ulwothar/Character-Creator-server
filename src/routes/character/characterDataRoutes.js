@@ -16,7 +16,15 @@ router.post('/add-class', check('name').notEmpty(), add_Class);
 
 router.post('/add-nature', check('name').notEmpty(), addNature);
 
-router.post('/add-race', check('name').notEmpty(), addRace);
+router.post(
+  '/add-race',
+  check('name').notEmpty(),
+  check('description').notEmpty(),
+  check('specialRules').notEmpty(),
+  check('psychologicalTraits').notEmpty(),
+  check('modifiers').isArray(),
+  addRace,
+);
 
 router.post('/add-skill', check('name').notEmpty(), addSkill);
 
@@ -182,6 +190,12 @@ export default router;
  *      modifiers:
  *        type: array
  *        items:
+ *          type: string
+ *      description:
+ *          type: string
+ *      specialRules:
+ *          type: string
+ *      psychologicalTraits:
  *          type: string
  *
  *  nature:
