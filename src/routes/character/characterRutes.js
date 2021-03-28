@@ -174,6 +174,12 @@ export default router;
  *      level:
  *        type: number
  *        default: 1
+ *      height:
+ *        type: number
+ *      weight:
+ *        type: number
+ *      description:
+ *        type: string
  *      stats:
  *        type: array
  *        items:
