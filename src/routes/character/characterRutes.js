@@ -92,6 +92,12 @@ export default router;
  *        type: string
  *      nature:
  *        type: string
+ *      height:
+ *        type: number
+ *      weight:
+ *        type: number
+ *      description:
+ *        type: string
  *      stats:
  *        type: array
  *        items:
