@@ -17,6 +17,9 @@ const characterSchema = new Schema({
   stats: { type: Array, required: true },
   skills: { type: Array, required: true },
   nature: { type: String, required: true },
+  weight: { type: Number, default: 0 },
+  height: { type: Number, default: 0 },
+  description: { type: String, default: '' },
   schools: [
     { type: schoolsSchema, default: { name: '', schoolId: '', spellId: [] } },
   ],

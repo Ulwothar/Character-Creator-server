@@ -12,30 +12,16 @@ function getRandomInt(min, max) {
 const getCharacterInfo = (character) => {
   let getCharacterInfo = {};
 
-  try {
-    getCharacterInfo = character.map((property) => {
-      getCharacterInfo.name = property.name;
-      getCharacterInfo.race = property.race;
-      getCharacterInfo.class = property._class;
-      getCharacterInfo.level = property.level;
-      getCharacterInfo.characterCode = property.characterCode;
-      getCharacterInfo.nature = property.nature;
-      getCharacterInfo.stats = property.characterStats;
-      getCharacterInfo.skills = property.characterSkills;
-      //getCharacterInfo.schools = character.schools;
-    });
-  } catch (error) {
-    console.log('adding new character');
-    getCharacterInfo.name = character.name;
-    getCharacterInfo.race = character.race;
-    getCharacterInfo.class = character._class;
-    getCharacterInfo.level = character.level;
-    getCharacterInfo.characterCode = character.characterCode;
-    getCharacterInfo.nature = character.nature;
-    getCharacterInfo.stats = character.stats;
-    getCharacterInfo.skills = character.skills;
-    //getCharacterInfo.schools = character.schools;
-  }
+  console.log('adding new character');
+  getCharacterInfo.name = character.name;
+  getCharacterInfo.race = character.race;
+  getCharacterInfo.class = character._class;
+  getCharacterInfo.level = character.level;
+  getCharacterInfo.characterCode = character.characterCode;
+  getCharacterInfo.nature = character.nature;
+  getCharacterInfo.stats = character.stats;
+  getCharacterInfo.skills = character.skills;
+  getCharacterInfo.schools = character.schools;
 
   return getCharacterInfo;
 };
@@ -53,7 +39,18 @@ export const addCharacter = async (req, res, next) => {
     );
   }
 
-  const { name, _class, race, nature, skills, stats, schools } = req.body;
+  const {
+    name,
+    _class,
+    race,
+    nature,
+    skills,
+    stats,
+    schools,
+    weight,
+    height,
+    description,
+  } = req.body;
 
   const level = 1;
 
@@ -70,6 +67,9 @@ export const addCharacter = async (req, res, next) => {
     nature,
     skills,
     stats,
+    weight,
+    height,
+    description,
     schools,
   });
 
@@ -112,13 +112,11 @@ export const getCharacter = async (req, res, next) => {
     newCharacter.map((character) => character.toObject({ getters: true })),
   );
 
-  res
-    .status(200)
-    .json({
-      character: newCharacter.map((character) =>
-        character.toObject({ getters: true }),
-      ),
-    });
+  res.status(200).json({
+    character: newCharacter.map((character) =>
+      character.toObject({ getters: true }),
+    ),
+  });
 };
 
 export const deleteCharacter = async (req, res, next) => {
@@ -172,6 +170,9 @@ export const updateCharacter = async (req, res, next) => {
     level,
     characterCode,
     schools,
+    weight,
+    height,
+    description,
   } = req.body;
 
   let updateCharacter;
@@ -184,6 +185,9 @@ export const updateCharacter = async (req, res, next) => {
     skills: skills,
     stats: stats,
     level: level,
+    weight: weight,
+    height: height,
+    description: description,
     schools: schools,
   };
 
@@ -277,24 +281,4 @@ export const addSchool = async (req, res, next) => {
     console.log(error);
     return next(res.status(500).json({ error: 'Server error' }));
   }
-
-  //let newSchool;
-
-  // try {
-  //   newSchool = await Character.find(filter);
-  // } catch (error) {
-  //   return next(res.status(500).json({ error: 'Server error' }));
-  // }
-
-  // newSchool[0].schools.push({
-  //   name: name,
-  //   schoolId: schoolId,
-  // });
-
-  // try {
-  //   await newSchool.save();
-  // } catch (error) {
-  //   console.log(error);
-  //   return next(res.status(500).json({ error: 'Server error' }));
-  // }
 };
