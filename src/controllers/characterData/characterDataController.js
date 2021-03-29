@@ -234,7 +234,7 @@ export const addSpell = async (req, res, next) => {
     );
   }
 
-  const { name, cost, schoolId, description, summary } = req.body;
+  const { name, cost, schoolId, description, summary, powerLevel } = req.body;
   console.log('before checking school');
   try {
     const checkId = await School.find({ _id: schoolId });
@@ -257,6 +257,7 @@ export const addSpell = async (req, res, next) => {
   const newSpell = new Spell({
     name,
     cost,
+    powerLevel,
     schoolId,
     description,
     summary,

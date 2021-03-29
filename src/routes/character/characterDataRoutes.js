@@ -35,10 +35,11 @@ router.post('/add-school', check('name').notEmpty(), addSchool);
 router.post(
   '/add-spell',
   check('name').notEmpty(),
-  check('cost').notEmpty(),
+  check('cost').isNumeric(),
   check('schoolId').notEmpty(),
   check('description').notEmpty(),
   check('summary').notEmpty(),
+  check('powerLevel').isNumeric(),
   addSpell,
 );
 
@@ -228,6 +229,9 @@ export default router;
  *      name:
  *        type: string
  *      cost:
+ *        type: integer
+ *        format: int32
+ *      powerLevel:
  *        type: integer
  *        format: int32
  *      schoolId:

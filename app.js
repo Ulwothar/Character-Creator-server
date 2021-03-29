@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
-import characterRoutes from './src/routes/character/characterRutes';
+import characterRoutes from './src/routes/character/characterRoutes';
 import characterDataRoutes from './src/routes/character/characterDataRoutes';
 import formData from './src/routes/formData/formData';
 
