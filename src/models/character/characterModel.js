@@ -2,12 +2,6 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const schoolsSchema = new Schema({
-  name: { type: String, required: true },
-  schoolId: { type: String, required: true },
-  spellId: [{ type: String }],
-});
-
 const characterSchema = new Schema({
   name: { type: String, required: true },
   race: { type: String, required: true },
@@ -20,9 +14,7 @@ const characterSchema = new Schema({
   weight: { type: Number, default: 0 },
   height: { type: Number, default: 0 },
   description: { type: String, default: '' },
-  schools: [
-    { type: schoolsSchema, default: { name: '', schoolId: '', spellId: [] } },
-  ],
+  spellsId: [{ type: String, default: '' }],
 });
 
 export default mongoose.model('Character', characterSchema);
