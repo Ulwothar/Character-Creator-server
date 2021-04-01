@@ -19,6 +19,8 @@ const getCharacterInfo = (character) => {
   getCharacterInfo.level = character.level;
   getCharacterInfo.characterCode = character.characterCode;
   getCharacterInfo.nature = character.nature;
+  getCharacterInfo.weight = character.weight;
+  getCharacterInfo.height = character.height;
   getCharacterInfo.stats = character.stats;
   getCharacterInfo.skills = character.skills;
   getCharacterInfo.schools = character.schools;
@@ -46,7 +48,7 @@ export const addCharacter = async (req, res, next) => {
     nature,
     skills,
     stats,
-    schools,
+    spellsId,
     weight,
     height,
     description,
@@ -70,7 +72,7 @@ export const addCharacter = async (req, res, next) => {
     weight,
     height,
     description,
-    schools,
+    spellsId,
   });
 
   try {
@@ -169,7 +171,7 @@ export const updateCharacter = async (req, res, next) => {
     stats,
     level,
     characterCode,
-    schools,
+    spellsId,
     weight,
     height,
     description,
@@ -188,7 +190,7 @@ export const updateCharacter = async (req, res, next) => {
     weight: weight,
     height: height,
     description: description,
-    schools: schools,
+    spellsId: spellsId,
   };
 
   try {

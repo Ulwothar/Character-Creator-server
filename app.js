@@ -1,27 +1,16 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
 import characterRoutes from './src/routes/character/characterRoutes';
 import characterDataRoutes from './src/routes/character/characterDataRoutes';
 import formData from './src/routes/formData/formData';
+import swaggerConfig from './src/shared/swaggerConfig';
 
 dotenv.config();
 
-const swaggerOptions = {
-  swaggerDefinition: {
-    info: {
-      title: 'Character Creator API',
-      description: 'Character Creator API Information',
-    },
-    servers: ['http://localhost:4000'],
-  },
-  apis: ['./src/routes/*/*.js'],
-};
-
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
+const swaggerDocs = swaggerConfig();
 
 const app = express();
 const DB = process.env.DB_URI;
@@ -52,7 +41,7 @@ app.use('/characterdata', characterDataRoutes);
 app.use('/formdata', formData);
 
 app.get('/', (req, res) => {
-  res.send('does it work?');
+  res.send('Welcome to Character Creator API');
 });
 
 mongoose
@@ -64,3 +53,5 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+export default app;
