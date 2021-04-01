@@ -106,6 +106,10 @@ export default router;
  *        type: array
  *        items:
  *          type: string
+ *      spellsId:
+ *        type: array
+ *        items:
+ *          type: string
  *    required:
  *      - name
  *      - _class
@@ -188,19 +192,10 @@ export default router;
  *        type: array
  *        items:
  *          type: string
- *      schools:
+ *      spellsId:
  *          type: array
  *          items:
- *            type: object
- *            properties:
- *              name:
- *                type: string
- *              schoolId:
- *                type: string
- *              spellId:
- *                type: array
- *                items:
- *                  type: string
+ *            type: string
  *    required:
  *      - name
  *      - _class
