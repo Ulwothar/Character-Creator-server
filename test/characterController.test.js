@@ -30,7 +30,8 @@ const DUMMY_NEW_CHARACTER = {
 //   spellsId,
 // };
 
-let characterCode; //Variable used to save characterCode with post test to enable us to delete the character during the delete endpoint test
+let characterCode; // Variable used to save characterCode with post test
+// to enable us to delete the character during the delete endpoint test
 
 const url = 'http://loccalhost:4000/character/';
 
@@ -52,9 +53,20 @@ describe('Character endpoints test', function () {
         assert(response.body.character.height, DUMMY_NEW_CHARACTER.height);
         assert(response.body.character.stats, DUMMY_NEW_CHARACTER.stats);
         assert(response.body.character.skills, DUMMY_NEW_CHARACTER.skills);
+        characterCode = response.body.character.characterCode;
         console.log(response.body.character);
+        console.log({ characterCode: characterCode });
         done();
       })
+      .catch((error) => done(error));
+  });
+
+  it('Deleting character', function (done) {
+    request(app)
+      .delete(`/character/${characterCode}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then(done())
       .catch((error) => done(error));
   });
 });
