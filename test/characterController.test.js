@@ -3,105 +3,18 @@ import { response } from 'express';
 import request from 'supertest';
 import app from '../app';
 
+import {
+  assertCheck,
+  DUMMY_NEW_CHARACTER,
+  DUMMY_UPDATED_CHARACTER as _UPDATED_CHARACTER,
+  DUMMY_WRONG_CHARACTER,
+} from './characterTestingData';
+
+let DUMMY_UPDATED_CHARACTER = _UPDATED_CHARACTER;
 let characterCode; // Variable used to save characterCode with post test
 // to enable us to delete the character during the delete endpoint test
 
-const DUMMY_NEW_CHARACTER = {
-  name: 'dummyName',
-  race: 'Human',
-  _class: 'Warrior',
-  nature: 'Lawful',
-  skills: [],
-  stats: [{ strength: 5 }],
-  weight: 95,
-  height: 180,
-  description: 'Some dummy description',
-  spellsId: [],
-};
-
-const DUMMY_WRONG_CHARACTER = {
-  race: 'Human',
-  _class: 'Warrior',
-  nature: 'Lawful',
-  skills: [],
-  stats: [],
-  weight: 95,
-  height: 180,
-  description: 'Some dummy description',
-  spellsId: [],
-};
-
-let DUMMY_UPDATED_CHARACTER = {
-  name: 'dummyName',
-  race: 'Elf',
-  _class: 'Rogue',
-  characterCode,
-  level: 3,
-  nature: 'Lawful',
-  skills: [],
-  stats: [{ strength: 5 }],
-  weight: 95,
-  height: 180,
-  description: 'Another dummy description',
-  spellsId: [],
-};
-
 const characterCode2 = 'asd';
-
-const deleteError = 'Character code is invalid, this character does not exist!';
-
-const assertCheck = (character, option) => {
-  switch (option) {
-    case 'AddCharacter':
-      assert(character.name === DUMMY_NEW_CHARACTER.name);
-      assert(character.race === DUMMY_NEW_CHARACTER.race);
-      assert(character._class === DUMMY_NEW_CHARACTER.class);
-      assert(character.level === 1);
-      assert(character.characterCode === characterCode);
-      assert(character.nature === DUMMY_NEW_CHARACTER.nature);
-      assert(character.weight === DUMMY_NEW_CHARACTER.weight);
-      assert(character.height === DUMMY_NEW_CHARACTER.height);
-      assert(
-        character.stats[0].strength == DUMMY_NEW_CHARACTER.stats[0].strength,
-      );
-      assert(character.skills[0] == DUMMY_NEW_CHARACTER.skills[0]);
-      break;
-
-    case 'UpdateCharacter':
-      assert(character.name === DUMMY_UPDATED_CHARACTER.name);
-      assert(character.race === DUMMY_UPDATED_CHARACTER.race);
-      assert(character._class === DUMMY_UPDATED_CHARACTER._class);
-      assert(character.level === DUMMY_UPDATED_CHARACTER.level);
-      assert(character.characterCode === characterCode);
-      assert(character.nature === DUMMY_UPDATED_CHARACTER.nature);
-      assert(character.weight === DUMMY_UPDATED_CHARACTER.weight);
-      assert(character.height === DUMMY_UPDATED_CHARACTER.height);
-      assert(
-        character.stats[0].strength ==
-          DUMMY_UPDATED_CHARACTER.stats[0].strength,
-      );
-      assert(character.skills[0] == DUMMY_UPDATED_CHARACTER.skills[0]);
-      break;
-
-    case 'GetCharacter':
-      assert(character.name === DUMMY_NEW_CHARACTER.name);
-      assert(character.race === DUMMY_NEW_CHARACTER.race);
-      assert(character._class === DUMMY_NEW_CHARACTER._class);
-      assert(character.level === 1);
-      assert(character.characterCode === characterCode);
-      assert(character.nature === DUMMY_NEW_CHARACTER.nature);
-      assert(character.weight === DUMMY_NEW_CHARACTER.weight);
-      assert(character.height === DUMMY_NEW_CHARACTER.height);
-      assert(
-        character.stats[0].strength == DUMMY_NEW_CHARACTER.stats[0].strength,
-      );
-      assert(character.skills[0] == DUMMY_NEW_CHARACTER.skills[0]);
-      break;
-    default:
-      return;
-  }
-};
-
 let assertionSwitch;
 
 describe('Character endpoints test', function () {
@@ -115,7 +28,7 @@ describe('Character endpoints test', function () {
         characterCode = response.body.character.characterCode;
         DUMMY_UPDATED_CHARACTER.characterCode = characterCode;
         assertionSwitch = 'AddCharacter';
-        assertCheck(response.body.character, assertionSwitch);
+        assertCheck(response.body.character, characterCode, assertionSwitch);
         done();
       })
       .catch((error) => done(error));
@@ -144,7 +57,7 @@ describe('Character endpoints test', function () {
       .expect((response) => {
         let character = response.body.character[0];
         assertionSwitch = 'GetCharacter';
-        assertCheck(character, assertionSwitch);
+        assertCheck(character, characterCode, assertionSwitch);
         done();
       })
       .catch((error) => done(error));
@@ -174,7 +87,7 @@ describe('Character endpoints test', function () {
       .then((response) => {
         assertionSwitch = 'UpdateCharacter';
         const character = response.body.character;
-        assertCheck(character, assertionSwitch);
+        assertCheck(character, characterCode, assertionSwitch);
         DUMMY_UPDATED_CHARACTER.characterCode = 'wrongCode';
         done();
       })
