@@ -194,6 +194,21 @@ export const updateCharacter = async (req, res, next) => {
   };
 
   try {
+    let characterCheck = await Character.find({ characterCode: characterCode });
+    if (characterCheck.length === 0) {
+      return next(
+        res.status(404).json({
+          error: 'Character does not exist, please check your character Code',
+        }),
+      );
+    }
+  } catch (error) {
+    return next(
+      res.status(500).json({ error: 'Server error, please try again' }),
+    );
+  }
+
+  try {
     updateCharacter = await Character.findOneAndUpdate(filter, update, {
       new: true,
       useFindAndModify: false,
@@ -237,7 +252,7 @@ export const levelUp = async (req, res, next) => {
     });
     if (!character) {
       return next(
-        res.status(406).json({
+        res.status(404).json({
           error: 'Could not find this character, please check your data',
         }),
       );
@@ -252,35 +267,36 @@ export const levelUp = async (req, res, next) => {
   res.status(201).json({ message: 'Level up!' });
 };
 
-export const addSchool = async (req, res, next) => {
-  const errors = validationResult(req);
+//Currently unavailable due to other changes. We don't know if this section will be deleted or patched yet.
+// export const addSchool = async (req, res, next) => {
+//   const errors = validationResult(req);
 
-  const dataError = ValidateData(errors);
+//   const dataError = ValidateData(errors);
 
-  if (dataError) {
-    return next(
-      res.status(406).json({
-        error: `Invalid inputs, please fill in the ${dataError} field.`,
-      }),
-    );
-  }
+//   if (dataError) {
+//     return next(
+//       res.status(406).json({
+//         error: `Invalid inputs, please fill in the ${dataError} field.`,
+//       }),
+//     );
+//   }
 
-  const { name, schoolId, characterCode } = req.body;
+//   const { name, schoolId, characterCode } = req.body;
 
-  const filter = { characterCode: characterCode };
+//   const filter = { characterCode: characterCode };
 
-  try {
-    const updatedCharacter = await Character.findOneAndUpdate(
-      filter,
-      { $push: { schools: { name: name, schoolId: schoolId } } },
-      { new: true, useFindAndModify: false },
-    );
-    console.log(updatedCharacter);
-    res
-      .status(201)
-      .json({ message: 'New school added.', character: updatedCharacter });
-  } catch (error) {
-    console.log(error);
-    return next(res.status(500).json({ error: 'Server error' }));
-  }
-};
+//   try {
+//     const updatedCharacter = await Character.findOneAndUpdate(
+//       filter,
+//       { $push: { schools: { name: name, schoolId: schoolId } } },
+//       { new: true, useFindAndModify: false },
+//     );
+//     console.log(updatedCharacter);
+//     res
+//       .status(201)
+//       .json({ message: 'New school added.', character: updatedCharacter });
+//   } catch (error) {
+//     console.log(error);
+//     return next(res.status(500).json({ error: 'Server error' }));
+//   }
+// };
