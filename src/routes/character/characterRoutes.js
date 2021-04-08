@@ -3,7 +3,7 @@ import { check } from 'express-validator';
 
 import {
   addCharacter,
-  addSchool,
+  //addSchool,
   deleteCharacter,
   getCharacter,
   levelUp,
@@ -49,13 +49,14 @@ router.patch(
   levelUp,
 );
 
-router.patch(
-  '/add-school',
-  check('name').notEmpty(),
-  check('schoolId').notEmpty(),
-  check('characterCode').notEmpty(),
-  addSchool,
-);
+//Deactivated due to changes made in character model. Not deleting, because this section will need to be discussed.
+// router.patch(
+//   '/add-school',
+//   check('name').notEmpty(),
+//   check('schoolId').notEmpty(),
+//   check('characterCode').notEmpty(),
+//   addSchool,
+// );
 
 export default router;
 
@@ -258,8 +259,10 @@ export default router;
  *        required: true
  */
 
+//Not available due to other changes made, not deleting because this will still need to be discussed
+//To activate this option in swagger, place '@swagger' on the line beefore '/character/add-school:'
 /**
- * @swagger
+ *
  * /character/add-school:
  *  patch:
  *    description: "Adds new magic school to selected character"
