@@ -243,6 +243,8 @@ export default router;
  *    responses:
  *      '201':
  *        description: "Character level updated"
+ *      '404':
+ *        description: "Character does not exist"
  *      '406':
  *        description: "Invalid inputs, please fill in all required data"
  *      '500':
