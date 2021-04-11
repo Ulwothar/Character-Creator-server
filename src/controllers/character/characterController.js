@@ -268,7 +268,7 @@ export const levelUp = async (req, res, next) => {
 };
 
 export const getCharactersBy = async (req, res, next) => {
-  let { race, _class, level, nature } = req.query;
+  let { race, _class, level, nature, aggregate } = req.query;
 
   let characters = [];
   let dbQuery;
@@ -280,58 +280,103 @@ export const getCharactersBy = async (req, res, next) => {
       return next(res.status(500).json({ characters: characters }));
     }
   }
-  if (race) {
-    race = race.charAt(0).toUpperCase() + race.slice(1);
-    try {
-      dbQuery = await Character.find({ race: race });
-      if (dbQuery.length === 0) {
-        dbQuery = { error: `There are no characters with ${race} race.` };
+  if (!aggregate) {
+    if (race) {
+      race = race.charAt(0).toUpperCase() + race.slice(1);
+      try {
+        dbQuery = await Character.find({ race: race });
+        if (dbQuery.length === 0) {
+          dbQuery = { error: `There are no characters with ${race} race.` };
+        }
+        characters.push({ byRace: dbQuery, count: dbQuery.length });
+      } catch (error) {
+        return next(res.status(500).json({ error: 'Server error.' }));
       }
-      characters.push({ byRace: dbQuery });
-    } catch (error) {
-      return next(res.status(500).json({ error: 'Server error.' }));
     }
+
+    if (_class) {
+      _class = _class.charAt(0).toUpperCase() + _class.slice(1);
+      try {
+        dbQuery = await Character.find({ _class: _class });
+        if (dbQuery.length === 0) {
+          dbQuery = { error: `There are no characters with ${_class} class.` };
+        }
+        characters.push({ byClass: dbQuery, count: dbQuery.length });
+      } catch (error) {
+        return next(res.status(500).json({ error: 'Server error.' }));
+      }
+    }
+
+    if (level) {
+      try {
+        dbQuery = await Character.find({ level: level });
+        if (dbQuery.length === 0) {
+          dbQuery = { error: `There are no characters with ${level} level.` };
+        }
+        characters.push({ byLevel: dbQuery, count: dbQuery.length });
+      } catch (error) {
+        return next(res.status(500).json({ error: 'Server error.' }));
+      }
+    }
+
+    if (nature) {
+      nature = nature.charAt(0).toUpperCase() + nature.slice(1);
+      try {
+        dbQuery = await Character.find({ nature: nature });
+        if (dbQuery.length === 0) {
+          dbQuery = { error: `There are no characters with ${nature} nature.` };
+        }
+        characters[characters.length] = {
+          byNature: dbQuery,
+          count: dbQuery.length,
+        };
+      } catch (error) {
+        return next(res.status(500).json({ error: 'Server error.' }));
+      }
+    }
+
+    return next(res.status(200).json({ characters: characters }));
   }
 
-  if (_class) {
-    _class = _class.charAt(0).toUpperCase() + _class.slice(1);
-    try {
-      dbQuery = await Character.find({ _class: _class });
-      if (dbQuery.length === 0) {
-        dbQuery = { error: `There are no characters with ${_class} class.` };
-      }
-      characters.push({ byClass: dbQuery });
-    } catch (error) {
-      return next(res.status(500).json({ error: 'Server error.' }));
-    }
+  try {
+    level = parseInt(level);
+    characters = await Character.aggregate([
+      {
+        $match: {
+          $and: [
+            { race: { $eq: race } },
+            { _class: { $eq: _class } },
+            { level: { $eq: level } },
+          ],
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          race: { $addToSet: '$race' },
+          _class: { $addToSet: '$_class' },
+          level: { $addToSet: '$level' },
+          nature: { $addToSet: '$nature' },
+          name: { $addToSet: '$name' },
+          count: { $sum: 1 },
+        },
+      },
+    ])
+      // .query.select('race _class level nature')
+      .exec()
+      .then((res) => {
+        // res.push({ count: res.length });
+        console.log(res);
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (error) {
+    console.log(error);
+    return next(res.status(500).json({ error: 'Server error.' }));
   }
-
-  if (level) {
-    try {
-      dbQuery = await Character.find({ level: level });
-      if (dbQuery.length === 0) {
-        dbQuery = { error: `There are no characters with ${level} level.` };
-      }
-      characters.push({ byLevel: dbQuery });
-    } catch (error) {
-      return next(res.status(500).json({ error: 'Server error.' }));
-    }
-  }
-
-  if (nature) {
-    nature = nature.charAt(0).toUpperCase() + nature.slice(1);
-    try {
-      dbQuery = await Character.find({ nature: nature });
-      if (dbQuery.length === 0) {
-        dbQuery = { error: `There are no characters with ${nature} nature.` };
-      }
-      characters[characters.length] = { byNature: dbQuery };
-    } catch (error) {
-      return next(res.status(500).json({ error: 'Server error.' }));
-    }
-  }
-
-  return next(res.status(200).json({ characters: characters }));
+  return res.status(200).json({ characters: characters });
 };
 
 //Currently unavailable due to other changes. We don't know if this section will be deleted or patched yet.
