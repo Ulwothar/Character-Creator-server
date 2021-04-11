@@ -6,6 +6,7 @@ import {
   //addSchool,
   deleteCharacter,
   getCharacter,
+  getCharactersBy,
   levelUp,
   updateCharacter,
 } from '../../controllers/character/characterController';
@@ -25,7 +26,7 @@ router.post(
 
 // cc - characterCode!
 
-router.get('/:cc', getCharacter);
+router.get('/specific/:cc', getCharacter);
 
 router.patch(
   '/',
@@ -48,6 +49,8 @@ router.patch(
   check('level').isNumeric(),
   levelUp,
 );
+
+router.get('/characterstats', getCharactersBy);
 
 //Deactivated due to changes made in character model. Not deleting, because this section will need to be discussed.
 // router.patch(
