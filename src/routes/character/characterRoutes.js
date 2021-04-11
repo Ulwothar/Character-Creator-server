@@ -146,6 +146,42 @@ export default router;
 
 /**
  * @swagger
+ * /character/characterstats:
+ *  get:
+ *    description: "Returns lists of characters grouped in provided categories. No query parameter added - returns all characters. If race, _class, level or nature are added to query, it will retrn all characters with specified stats."
+ *    parameters:
+ *    - in: "query"
+ *      name: "race"
+ *      description: "Returns all characters with specified race"
+ *      schema:
+ *        type: string
+ *    - in: "query"
+ *      name: "_class"
+ *      description: "Returns all characters with specified class"
+ *      schema:
+ *        type: string
+ *    - in: "query"
+ *      name: "level"
+ *      description: "Returns all characters with specified race"
+ *      schema:
+ *        type: number
+ *    - in: "query"
+ *      name: "nature"
+ *      description: "Returns all characters with specified nature"
+ *      schema:
+ *        type: string
+ *    responses:
+ *      '200':
+ *        description: "Characters returned successfuly"
+ *      '404':
+ *        description: "Characters not found"
+ *      '500':
+ *        description: "Server error"
+ *
+ */
+
+/**
+ * @swagger
  *
  * /character:
  *   patch:

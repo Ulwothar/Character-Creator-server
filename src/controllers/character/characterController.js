@@ -268,7 +268,7 @@ export const levelUp = async (req, res, next) => {
 };
 
 export const getCharactersBy = async (req, res, next) => {
-  const { race, _class, level, nature } = req.query;
+  let { race, _class, level, nature } = req.query;
 
   let characters = [];
   let dbQuery;
@@ -281,6 +281,7 @@ export const getCharactersBy = async (req, res, next) => {
     }
   }
   if (race) {
+    race = race.charAt(0).toUpperCase() + race.slice(1);
     try {
       dbQuery = await Character.find({ race: race });
       if (dbQuery.length === 0) {
@@ -293,6 +294,7 @@ export const getCharactersBy = async (req, res, next) => {
   }
 
   if (_class) {
+    _class = _class.charAt(0).toUpperCase() + _class.slice(1);
     try {
       dbQuery = await Character.find({ _class: _class });
       if (dbQuery.length === 0) {
@@ -317,6 +319,7 @@ export const getCharactersBy = async (req, res, next) => {
   }
 
   if (nature) {
+    nature = nature.charAt(0).toUpperCase() + nature.slice(1);
     try {
       dbQuery = await Character.find({ nature: nature });
       if (dbQuery.length === 0) {
@@ -329,10 +332,8 @@ export const getCharactersBy = async (req, res, next) => {
   }
 
   return next(res.status(200).json({ characters: characters }));
-  // const params = req.query;
-  // console.log(req.query);
-  // return res.json({ params: params });
 };
+
 //Currently unavailable due to other changes. We don't know if this section will be deleted or patched yet.
 // export const addSchool = async (req, res, next) => {
 //   const errors = validationResult(req);
