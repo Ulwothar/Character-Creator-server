@@ -52,7 +52,7 @@ describe('Character endpoints test', function () {
 
   it('Getting character', (done) => {
     request(app)
-      .get(`/character/${characterCode}`)
+      .get(`/character/specific/${characterCode}`)
       .expect(200)
       .expect((response) => {
         let character = response.body.character[0];
@@ -65,7 +65,7 @@ describe('Character endpoints test', function () {
 
   it('Getting character with wrong code', (done) => {
     request(app)
-      .get(`/character/${characterCode2}`)
+      .get(`/character/specific/${characterCode2}`)
       .expect(404)
       .then((response) => {
         assert(
@@ -165,6 +165,46 @@ describe('Character endpoints test', function () {
           response.body.error ===
             'Character code is invalid, this character does not exist!',
           'deleteError',
+        );
+        done();
+      })
+      .catch((error) => done(error));
+  });
+
+  it('Getting list of all characters', (done) => {
+    request(app)
+      .get('/character/characterstats')
+      .expect(200)
+      .then((response) => {
+        assert(response.body.characters.length > 0, 'No characters recieved');
+
+        done();
+      })
+      .catch((error) => done(error));
+  });
+
+  it('Getting lists of characters grouped by different categories', (done) => {
+    request(app)
+      .get(
+        '/character/characterstats/?level=1&race=Human&nature=Lawfull&_class=Warrior',
+      )
+      .expect(200)
+      .then((response) => {
+        assert(
+          response.body.characters[0].byRace.length > 0,
+          "Didn't get any human characters.",
+        );
+        assert(
+          response.body.characters[1].byClass.length > 0,
+          "Didn't get any warrior characters.",
+        );
+        assert(
+          response.body.characters[2].byLevel.length > 0,
+          "Didn't get any level 1 characters.",
+        );
+        assert(
+          response.body.characters[3].byNature.length > 0,
+          "Didn't get any lawfull characters.",
         );
         done();
       })
