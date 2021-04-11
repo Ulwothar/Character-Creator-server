@@ -267,6 +267,72 @@ export const levelUp = async (req, res, next) => {
   res.status(201).json({ message: 'Level up!' });
 };
 
+export const getCharactersBy = async (req, res, next) => {
+  const { race, _class, level, nature } = req.query;
+
+  let characters = [];
+  let dbQuery;
+
+  if (!race && !_class && !level && !nature) {
+    try {
+      characters = await Character.find();
+    } catch (error) {
+      return next(res.status(500).json({ characters: characters }));
+    }
+  }
+  if (race) {
+    try {
+      dbQuery = await Character.find({ race: race });
+      if (dbQuery.length === 0) {
+        dbQuery = { error: `There are no characters with ${race} race.` };
+      }
+      characters.push({ byRace: dbQuery });
+    } catch (error) {
+      return next(res.status(500).json({ error: 'Server error.' }));
+    }
+  }
+
+  if (_class) {
+    try {
+      dbQuery = await Character.find({ _class: _class });
+      if (dbQuery.length === 0) {
+        dbQuery = { error: `There are no characters with ${_class} class.` };
+      }
+      characters.push({ byClass: dbQuery });
+    } catch (error) {
+      return next(res.status(500).json({ error: 'Server error.' }));
+    }
+  }
+
+  if (level) {
+    try {
+      dbQuery = await Character.find({ level: level });
+      if (dbQuery.length === 0) {
+        dbQuery = { error: `There are no characters with ${level} level.` };
+      }
+      characters.push({ byLevel: dbQuery });
+    } catch (error) {
+      return next(res.status(500).json({ error: 'Server error.' }));
+    }
+  }
+
+  if (nature) {
+    try {
+      dbQuery = await Character.find({ nature: nature });
+      if (dbQuery.length === 0) {
+        dbQuery = { error: `There are no characters with ${nature} nature.` };
+      }
+      characters[characters.length] = { byNature: dbQuery };
+    } catch (error) {
+      return next(res.status(500).json({ error: 'Server error.' }));
+    }
+  }
+
+  return next(res.status(200).json({ characters: characters }));
+  // const params = req.query;
+  // console.log(req.query);
+  // return res.json({ params: params });
+};
 //Currently unavailable due to other changes. We don't know if this section will be deleted or patched yet.
 // export const addSchool = async (req, res, next) => {
 //   const errors = validationResult(req);
