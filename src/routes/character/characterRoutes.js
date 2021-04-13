@@ -170,6 +170,11 @@ export default router;
  *      description: "Returns all characters with specified nature"
  *      schema:
  *        type: string
+ *    - in: "query"
+ *      name: "aggregate"
+ *      description: "Triggers if returned data should be grouped together. If anything is passed here, the value is 'true'"
+ *      schema:
+ *        type: boolean
  *    responses:
  *      '200':
  *        description: "Characters returned successfuly"

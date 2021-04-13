@@ -272,17 +272,32 @@ export const getCharactersBy = async (req, res, next) => {
 
   let characters = [];
   let dbQuery;
-
-  if (!race && !_class && !level && !nature) {
-    try {
-      characters = await Character.find();
-    } catch (error) {
-      return next(res.status(500).json({ characters: characters }));
-    }
+  if (race) {
+    race = race.charAt(0).toUpperCase() + race.slice(1);
   }
+
+  if (_class) {
+    _class = _class.charAt(0).toUpperCase() + _class.slice(1);
+  }
+
+  if (nature) {
+    nature = nature.charAt(0).toUpperCase() + nature.slice(1);
+  }
+
+  if (level) {
+    level = parseInt(level);
+  }
+
   if (!aggregate) {
+    if (!race && !_class && !level && !nature) {
+      try {
+        characters = await Character.find();
+      } catch (error) {
+        return next(res.status(500).json({ characters: characters }));
+      }
+    }
+
     if (race) {
-      race = race.charAt(0).toUpperCase() + race.slice(1);
       try {
         dbQuery = await Character.find({ race: race });
         if (dbQuery.length === 0) {
@@ -295,7 +310,6 @@ export const getCharactersBy = async (req, res, next) => {
     }
 
     if (_class) {
-      _class = _class.charAt(0).toUpperCase() + _class.slice(1);
       try {
         dbQuery = await Character.find({ _class: _class });
         if (dbQuery.length === 0) {
@@ -320,7 +334,6 @@ export const getCharactersBy = async (req, res, next) => {
     }
 
     if (nature) {
-      nature = nature.charAt(0).toUpperCase() + nature.slice(1);
       try {
         dbQuery = await Character.find({ nature: nature });
         if (dbQuery.length === 0) {
@@ -335,9 +348,37 @@ export const getCharactersBy = async (req, res, next) => {
       }
     }
 
-    return next(res.status(200).json({ characters: characters }));
+    return res.status(200).json({ characters: characters });
   }
-  level = parseInt(level);
+
+  if (!race && !_class && !nature && !level) {
+    characters = await Character.aggregate([
+      {
+        $match: { level: { $gte: 0 } },
+      },
+      {
+        $group: {
+          _id: null,
+          _class: { $addToSet: '$_class' },
+          race: { $addToSet: '$race' },
+          level: { $addToSet: '$level' },
+          count: { $sum: 1 },
+        },
+      },
+    ])
+      .exec()
+      .then((res) => {
+        return res;
+      })
+      .catch((error) => {
+        if (error) {
+          console.log(error);
+          return next(res.status(500).json({ error: 'Server error!' }));
+        }
+      });
+    return res.status(200).json({ characters: characters });
+  }
+
   characters = await Character.aggregate([
     {
       $match: {
