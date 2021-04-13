@@ -337,44 +337,54 @@ export const getCharactersBy = async (req, res, next) => {
 
     return next(res.status(200).json({ characters: characters }));
   }
+  level = parseInt(level);
+  characters = await Character.aggregate([
+    {
+      $match: {
+        $and: [
+          {
+            $or: [race ? { race: race } : { race: { $ne: race } }],
+          },
+          {
+            $or: [_class ? { _class: _class } : { _class: { $ne: _class } }],
+          },
+          {
+            $or: [nature ? { nature: nature } : { nature: { $ne: nature } }],
+          },
+          {
+            $or: [level ? { level: level } : { level: { $gt: 0 } }],
+          },
+        ],
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        race: { $addToSet: '$race' },
+        _class: { $addToSet: '$_class' },
+        level: { $addToSet: '$level' },
+        nature: { $addToSet: '$nature' },
+        name: { $addToSet: '$name' },
+        count: { $sum: 1 },
+      },
+    },
+  ])
+    .exec()
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((err) => {
+      console.log(err);
+      return next(res.status(500).json({ error: 'Server error.' }));
+    });
 
-  try {
-    level = parseInt(level);
-    characters = await Character.aggregate([
-      {
-        $match: {
-          $and: [
-            { race: { $eq: race } },
-            { _class: { $eq: _class } },
-            { level: { $eq: level } },
-          ],
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          race: { $addToSet: '$race' },
-          _class: { $addToSet: '$_class' },
-          level: { $addToSet: '$level' },
-          nature: { $addToSet: '$nature' },
-          name: { $addToSet: '$name' },
-          count: { $sum: 1 },
-        },
-      },
-    ])
-      // .query.select('race _class level nature')
-      .exec()
-      .then((res) => {
-        // res.push({ count: res.length });
-        console.log(res);
-        return res;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } catch (error) {
-    console.log(error);
-    return next(res.status(500).json({ error: 'Server error.' }));
+  if (characters.length === 0) {
+    return next(
+      res
+        .status(404)
+        .json({ message: 'There are no characters with specified criteria.' }),
+    );
   }
   return res.status(200).json({ characters: characters });
 };
