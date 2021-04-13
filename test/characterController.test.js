@@ -148,29 +148,6 @@ describe('Character endpoints test', function () {
       .catch((error) => done(error));
   });
 
-  it('Deleting character', function (done) {
-    request(app)
-      .delete(`/character/${characterCode}`)
-      .expect('Content-Type', /json/)
-      .expect(200, done);
-  });
-
-  it('Deleting character with wrong characterCode', function (done) {
-    request(app)
-      .delete(`/character/${characterCode2}`)
-      .expect('Content-Type', /json/)
-      .expect(404)
-      .then((response) => {
-        assert(
-          response.body.error ===
-            'Character code is invalid, this character does not exist!',
-          'deleteError',
-        );
-        done();
-      })
-      .catch((error) => done(error));
-  });
-
   it('Getting list of all characters', (done) => {
     request(app)
       .get('/character/characterstats')
@@ -205,6 +182,43 @@ describe('Character endpoints test', function () {
         assert(
           response.body.characters[3].byNature.length > 0,
           "Didn't get any lawfull characters.",
+        );
+        done();
+      })
+      .catch((error) => done(error));
+  });
+
+  it('Getting set of characters with passed criteria', (done) => {
+    request(app)
+      .get(
+        '/character/characterstats/?level=1&race=Human&nature=Lawfull&_class=Warrior&aggregate=true',
+      )
+      .expect(200)
+      .then((response) => {
+        assert(response.body.characters[0].count >= 1, 'No characters found!');
+        assert(response.body.characters[0]._id === null, 'Wrong ids recieved');
+        done();
+      })
+      .catch((error) => done(error));
+  });
+
+  it('Deleting character', function (done) {
+    request(app)
+      .delete(`/character/${characterCode}`)
+      .expect('Content-Type', /json/)
+      .expect(200, done);
+  });
+
+  it('Deleting character with wrong characterCode', function (done) {
+    request(app)
+      .delete(`/character/${characterCode2}`)
+      .expect('Content-Type', /json/)
+      .expect(404)
+      .then((response) => {
+        assert(
+          response.body.error ===
+            'Character code is invalid, this character does not exist!',
+          'deleteError',
         );
         done();
       })
