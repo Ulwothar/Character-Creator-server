@@ -1,5 +1,6 @@
 import express from 'express';
 import { check } from 'express-validator';
+import multer from 'multer';
 
 import {
   addCharacter,
@@ -10,6 +11,11 @@ import {
   levelUp,
   updateCharacter,
 } from '../../controllers/character/characterController';
+
+//multer options
+const upload = multer({
+  dest: 'images/characters',
+});
 
 const router = express.Router();
 
@@ -51,6 +57,10 @@ router.patch(
 );
 
 router.get('/characterstats', getCharactersBy);
+
+router.post('/upload', upload.single('upload'), (req, res) => {
+  res.send();
+});
 
 //Deactivated due to changes made in character model. Not deleting, because this section will need to be discussed.
 // router.patch(
