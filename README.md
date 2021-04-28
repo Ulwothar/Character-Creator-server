@@ -1,5 +1,6 @@
 # Character-Creator-server
 Server part of Character Cretor application
+All endpoints can be checked on this project's website using apio-docs. Please check: http://cc.mattkrp.co.uk/api-docs
 
 API endpoints:
 
