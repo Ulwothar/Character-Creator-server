@@ -11,6 +11,8 @@ const characterSchema = new Schema({
   stats: { type: Array, required: true },
   skills: { type: Array, required: true },
   nature: { type: String, required: true },
+  gender: { type: String, required: true },
+  image: { type: String },
   weight: { type: Number, default: 0 },
   height: { type: Number, default: 0 },
   description: { type: String, default: '' },

@@ -34,6 +34,9 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+//makes the folder publicly available
+app.use('/images/characters/', express.static('images/characters'));
+
 app.use('/character', characterRoutes);
 
 app.use('/characterdata', characterDataRoutes);
