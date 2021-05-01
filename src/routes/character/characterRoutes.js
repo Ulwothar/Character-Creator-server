@@ -13,20 +13,42 @@ import {
 } from '../../controllers/character/characterController';
 
 //multer options
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images/characters/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    cb(null, true);
+  } else {
+    cb('Please send only images with jpg or png extensions', false);
+  }
+};
 const upload = multer({
-  dest: 'images/characters',
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5,
+  },
+  fileFilter: fileFilter,
 });
 
 const router = express.Router();
 
 router.post(
   '/',
+  upload.single('image'),
   check('race').notEmpty(),
   check('_class').notEmpty(),
   check('name').notEmpty(),
   check('nature').notEmpty(),
   check('stats').exists(),
   check('skills').exists(),
+  check('gender').notEmpty(),
   addCharacter,
 );
 
@@ -44,6 +66,7 @@ router.patch(
   check('skills').isArray(),
   check('characterCode').notEmpty(),
   check('level').isNumeric(),
+  check('gender').notEmpty(),
   updateCharacter,
 );
 
@@ -59,6 +82,7 @@ router.patch(
 router.get('/characterstats', getCharactersBy);
 
 router.post('/upload', upload.single('upload'), (req, res) => {
+  console.log(req.file);
   res.send();
 });
 
@@ -79,7 +103,7 @@ export default router;
  * /character:
  *   post:
  *    description: "Use to create a new character"
- *    consumes: "application/json"
+ *    consumes: "multipart/form-data"
  *    produces: "application/json"
  *    parameters:
  *    - in: "body"
@@ -106,6 +130,8 @@ export default router;
  *        type: string
  *      nature:
  *        type: string
+ *      gender:
+ *        type: string
  *      height:
  *        type: number
  *      weight:
@@ -129,6 +155,7 @@ export default router;
  *      - _class
  *      - race
  *      - nature
+ *      - gender
  *      - stats
  *      - skills
  *
@@ -201,7 +228,7 @@ export default router;
  * /character:
  *   patch:
  *    description: "Use to update an existing character"
- *    consumes: "application/json"
+ *    consumes: "multipart/form-data"
  *    produces: "application/json"
  *    parameters:
  *    - in: "body"
@@ -227,6 +254,8 @@ export default router;
  *      _class:
  *        type: string
  *      nature:
+ *        type: string
+ *      gender:
  *        type: string
  *      characterCode:
  *        type: string
@@ -256,6 +285,7 @@ export default router;
  *      - _class
  *      - race
  *      - nature
+ *      - gender
  *      - stats
  *      - skills
  *      - level
