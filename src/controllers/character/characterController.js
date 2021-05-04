@@ -182,6 +182,7 @@ export const updateCharacter = async (req, res, next) => {
     weight,
     height,
     description,
+    image,
   } = req.body;
 
   let updateCharacter;
@@ -198,6 +199,7 @@ export const updateCharacter = async (req, res, next) => {
     height: height,
     description: description,
     spellsId: spellsId,
+    image: image,
   };
 
   try {
