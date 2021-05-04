@@ -23,7 +23,16 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
+  //if no image was sent, place link to default image if there is any
+  if (!file) {
+    req.body.image = 'Default image';
+    cb(null, true);
+  }
+
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    // Replace 'localhost:4000' with your domain name for production
+    req.body.image = `localhost:4000/images/characters/${file.originalname}`;
+    console.log(req.body);
     cb(null, true);
   } else {
     cb('Please send only images with jpg or png extensions', false);

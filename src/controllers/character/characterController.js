@@ -23,7 +23,9 @@ const getCharacterInfo = (character) => {
   getCharacterInfo.height = character.height;
   getCharacterInfo.stats = character.stats;
   getCharacterInfo.skills = character.skills;
-  getCharacterInfo.schools = character.schools;
+  getCharacterInfo.image = character.image;
+  getCharacterInfo.gender = character.gender;
+  getCharacterInfo.description = character.description;
 
   return getCharacterInfo;
 };
@@ -40,6 +42,7 @@ export const addCharacter = async (req, res, next) => {
       }),
     );
   }
+  console.log(req.body.image);
 
   const {
     name,
@@ -53,6 +56,7 @@ export const addCharacter = async (req, res, next) => {
     weight,
     height,
     description,
+    image,
   } = req.body;
 
   const level = 1;
@@ -75,6 +79,7 @@ export const addCharacter = async (req, res, next) => {
     height,
     description,
     spellsId,
+    image,
   });
 
   try {
