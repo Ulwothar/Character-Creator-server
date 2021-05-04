@@ -25,7 +25,6 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
   //if no image was sent, place link to default image if there is any
   if (!file) {
-    req.body.image = 'Default image';
     cb(null, true);
   }
 
