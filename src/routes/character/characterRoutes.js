@@ -67,12 +67,13 @@ router.get('/specific/:cc', getCharacter);
 
 router.patch(
   '/',
+  upload.single('image'),
   check('race').notEmpty(),
   check('_class').notEmpty(),
   check('name').notEmpty(),
   check('nature').notEmpty(),
-  check('stats').isArray(),
-  check('skills').isArray(),
+  check('stats').exists(),
+  check('skills').exists(),
   check('characterCode').notEmpty(),
   check('level').isNumeric(),
   check('gender').notEmpty(),
