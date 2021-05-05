@@ -28,10 +28,6 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
   }
 
-  if (req.body.onlineImage) {
-    cb(null, false);
-  }
-
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     // Replace 'localhost:4000' with your domain name for production
     req.body.image = `localhost:4000/images/characters/${file.originalname}`;
