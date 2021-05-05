@@ -50,16 +50,26 @@ export const addCharacter = async (req, res, next) => {
     race,
     nature,
     gender,
-    skills,
-    stats,
     spellsId,
     weight,
     height,
     description,
-    image,
   } = req.body;
 
+  let image;
+
+  if (req.body.image) {
+    image = req.body.image;
+  } else if (req.body.onlineImage) {
+    image = req.body.onlineImage;
+  }
+
+  const stats = req.body.stats.split(',');
+  const skills = req.body.skills.split(',');
+
   const level = 1;
+
+  let someImage = image;
 
   const cName = name.slice(0, 4);
   const code = getRandomInt(10000, 100000);

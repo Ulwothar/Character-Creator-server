@@ -28,6 +28,10 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
   }
 
+  if (req.body.onlineImage) {
+    cb(null, false);
+  }
+
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     // Replace 'localhost:4000' with your domain name for production
     req.body.image = `localhost:4000/images/characters/${file.originalname}`;
@@ -112,14 +116,75 @@ export default router;
  * /character:
  *   post:
  *    description: "Use to create a new character"
- *    consumes: "multipart/form-data"
+ *    consumes:
+ *      - multipart/form-data
  *    produces: "application/json"
  *    parameters:
- *    - in: "body"
- *      name: "createCharacter"
- *      description: "Create new character here"
- *      schema:
- *        $ref: '#/definitions/newCharacter'
+ *    - in: "formData"
+ *      name: "image"
+ *      type: file
+ *      required: false
+ *      description: "Upload image or provide link to an image for character avatar"
+ *    - in: "formData"
+ *      name: "onlineImage"
+ *      type: string
+ *      required: false
+ *      description: "Link to www image"
+ *    - in: "formData"
+ *      name: "name"
+ *      type: string
+ *      required: true
+ *      description: "Name of the character"
+ *    - in: "formData"
+ *      name: "race"
+ *      type: string
+ *      required: true
+ *      description: "Race of the character"
+ *    - in: "formData"
+ *      name: "_class"
+ *      type: string
+ *      required: true
+ *      description: "Class of the character"
+ *    - in: "formData"
+ *      name: "nature"
+ *      type: string
+ *      required: true
+ *      description: "Nature of the character"
+ *    - in: "formData"
+ *      name: "gender"
+ *      type: string
+ *      required: true
+ *      description: "Gender of the character"
+ *    - in: "formData"
+ *      name: "height"
+ *      type: number
+ *      required: false
+ *      description: "Height of the character"
+ *    - in: "formData"
+ *      name: "weight"
+ *      type: number
+ *      required: false
+ *      description: "Weight of the character"
+ *    - in: "formData"
+ *      name: "description"
+ *      type: string
+ *      required: false
+ *      description: "Character's description"
+ *    - in: "formData"
+ *      name: "stats"
+ *      type: string
+ *      required: true
+ *      description: "Character's stats - list of stats, separated with coma - stat1, stat2, stat3, ..."
+ *    - in: "formData"
+ *      name: "skills"
+ *      type: string
+ *      required: true
+ *      description: "Character's skills, separated with coma - skill1, skill2, skill3, ..."
+ *    - in: "formData"
+ *      name: "spellsId"
+ *      type: string
+ *      required: false
+ *      description: "Character's spells, separated with coma - spell1, spell2, spell3, ..."
  *    responses:
  *      '201':
  *        description: Character created successfully!
