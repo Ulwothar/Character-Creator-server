@@ -192,8 +192,15 @@ export const updateCharacter = async (req, res, next) => {
     weight,
     height,
     description,
-    image,
   } = req.body;
+
+  let image;
+
+  if (req.body.image) {
+    image = req.body.image;
+  } else if (req.body.onlineImage) {
+    image = req.body.onlineImage;
+  }
 
   let updateCharacter;
   const filter = { characterCode: characterCode };
