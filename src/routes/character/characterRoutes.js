@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  //if no image was sent, place link to default image if there is any
+  //if no image was sent, return true with no error - image is not required
   if (!file) {
     cb(null, true);
   }
@@ -298,14 +298,85 @@ export default router;
  * /character:
  *   patch:
  *    description: "Use to update an existing character"
- *    consumes: "multipart/form-data"
+ *    consumes:
+ *      - multipart/form-data
  *    produces: "application/json"
  *    parameters:
- *    - in: "body"
- *      name: "updateCharacter"
- *      description: "Character Update Route"
- *      schema:
- *        $ref: '#/definitions/updatedCharacter'
+ *    - in: "formData"
+ *      name: "image"
+ *      type: file
+ *      required: false
+ *      description: "Upload image or provide link to an image for character avatar"
+ *    - in: "formData"
+ *      name: "onlineImage"
+ *      type: string
+ *      required: false
+ *      description: "Link to www image"
+ *    - in: "formData"
+ *      name: "characterCode"
+ *      type: string
+ *      required: true
+ *      description: "character code - used as character id for front-end and can not be changed"
+ *    - in: "formData"
+ *      name: "name"
+ *      type: string
+ *      required: true
+ *      description: "Name of the character"
+ *    - in: "formData"
+ *      name: "race"
+ *      type: string
+ *      required: true
+ *      description: "Race of the character"
+ *    - in: "formData"
+ *      name: "_class"
+ *      type: string
+ *      required: true
+ *      description: "Class of the character"
+ *    - in: "formData"
+ *      name: "nature"
+ *      type: string
+ *      required: true
+ *      description: "Nature of the character"
+ *    - in: "formData"
+ *      name: "level"
+ *      type: number
+ *      required: true
+ *      description: "Level of the character(experience)"
+ *    - in: "formData"
+ *      name: "gender"
+ *      type: string
+ *      required: true
+ *      description: "Gender of the character"
+ *    - in: "formData"
+ *      name: "height"
+ *      type: number
+ *      required: false
+ *      description: "Height of the character"
+ *    - in: "formData"
+ *      name: "weight"
+ *      type: number
+ *      required: false
+ *      description: "Weight of the character"
+ *    - in: "formData"
+ *      name: "description"
+ *      type: string
+ *      required: false
+ *      description: "Character's description"
+ *    - in: "formData"
+ *      name: "stats"
+ *      type: string
+ *      required: true
+ *      description: "Character's stats - list of stats, separated with coma - stat1, stat2, stat3, ..."
+ *    - in: "formData"
+ *      name: "skills"
+ *      type: string
+ *      required: true
+ *      description: "Character's skills, separated with coma - skill1, skill2, skill3, ..."
+ *    - in: "formData"
+ *      name: "spellsId"
+ *      type: string
+ *      required: false
+ *      description: "Character's spells, separated with coma - spell1, spell2, spell3, ..."
  *    responses:
  *      '201':
  *        description: Character updated successfully!
