@@ -47,7 +47,7 @@ export const delete_Class = async (req, res, next) => {
   const { name } = req.body;
 
   try {
-    _classCheck = await _Class.findOne({ name: name });
+    let _classCheck = await _Class.findOne({ name: name });
     if (!_classCheck) {
       return next(
         res
@@ -107,6 +107,36 @@ export const addNature = async (req, res, next) => {
   res.status(201).json({ nature: newNature });
 };
 
+export const deleteNature = async (req, res, next) => {
+  const { name } = req.body;
+
+  try {
+    let natureCheck = await Nature.findOne({ name: name });
+    if (!natureCheck) {
+      return next(
+        res
+          .status(400)
+          .json({ message: "Nature doesn't exist, please check your data." }),
+      );
+    }
+  } catch (error) {
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+  try {
+    await Nature.deleteOne({ name: name });
+  } catch (error) {
+    return next(
+      res.status(500).json({
+        error: 'Server error occured while deleting nature, please try again.',
+      }),
+    );
+  }
+
+  return res.status(200).json({ message: 'Nature deleted successfully' });
+};
+
 export const addRace = async (req, res, next) => {
   const errors = validationResult(req);
 
@@ -150,6 +180,36 @@ export const addRace = async (req, res, next) => {
   res.status(201).json({ race: newRace });
 };
 
+export const deleteRace = async (req, res, next) => {
+  const { name } = req.body;
+
+  try {
+    let raceCheck = await Race.findOne({ name: name });
+    if (!raceCheck) {
+      return next(
+        res
+          .status(400)
+          .json({ message: "Race doesn't exist, please check your data." }),
+      );
+    }
+  } catch (error) {
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+  try {
+    await Race.deleteOne({ name: name });
+  } catch (error) {
+    return next(
+      res.status(500).json({
+        error: 'Server error occured while deleting race, please try again.',
+      }),
+    );
+  }
+
+  return res.status(200).json({ message: 'Race deleted successfully' });
+};
+
 export const addSkill = async (req, res, next) => {
   const errors = validationResult(req);
 
@@ -182,6 +242,36 @@ export const addSkill = async (req, res, next) => {
   }
 
   res.status(201).json({ skill: newSkill });
+};
+
+export const deleteSkill = async (req, res, next) => {
+  const { name } = req.body;
+
+  try {
+    let skillCheck = await Skill.findOne({ name: name });
+    if (!skillCheck) {
+      return next(
+        res
+          .status(400)
+          .json({ message: "Skill doesn't exist, please check your data." }),
+      );
+    }
+  } catch (error) {
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+  try {
+    await Skill.deleteOne({ name: name });
+  } catch (error) {
+    return next(
+      res.status(500).json({
+        error: 'Server error occured while deleting skill, please try again.',
+      }),
+    );
+  }
+
+  return res.status(200).json({ message: 'Skil deleted successfully' });
 };
 
 export const addStat = async (req, res, next) => {
@@ -218,6 +308,36 @@ export const addStat = async (req, res, next) => {
   res.status(201).json({ stat: newStat });
 };
 
+export const deleteStat = async (req, res, next) => {
+  const { name } = req.body;
+
+  try {
+    let statCheck = await Stat.findOne({ name: name });
+    if (!statCheck) {
+      return next(
+        res
+          .status(400)
+          .json({ message: "Stat doesn't exist, please check your data." }),
+      );
+    }
+  } catch (error) {
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+  try {
+    await Stat.deleteOne({ name: name });
+  } catch (error) {
+    return next(
+      res.status(500).json({
+        error: 'Server error occured while deleting stat, please try again.',
+      }),
+    );
+  }
+
+  return res.status(200).json({ message: 'Stat deleted successfully' });
+};
+
 export const addSchool = async (req, res, next) => {
   const errors = validationResult(req);
 
@@ -249,6 +369,36 @@ export const addSchool = async (req, res, next) => {
   }
 
   res.status(201).json({ school: newSchool });
+};
+
+export const deleteSchool = async (req, res, next) => {
+  const { name } = req.body;
+
+  try {
+    let schoolCheck = await School.findOne({ name: name });
+    if (!schoolCheck) {
+      return next(
+        res
+          .status(400)
+          .json({ message: "School doesn't exist, please check your data." }),
+      );
+    }
+  } catch (error) {
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+  try {
+    await School.deleteOne({ name: name });
+  } catch (error) {
+    return next(
+      res.status(500).json({
+        error: 'Server error occured while deleting school, please try again.',
+      }),
+    );
+  }
+
+  return res.status(200).json({ message: 'School deleted successfully' });
 };
 
 export const addSpell = async (req, res, next) => {
@@ -309,6 +459,36 @@ export const addSpell = async (req, res, next) => {
   res
     .status(201)
     .json({ message: 'Spell created successfully', spell: newSpell });
+};
+
+export const deleteSpell = async (req, res, next) => {
+  const { name } = req.body;
+
+  try {
+    let spellCheck = await Spell.findOne({ name: name });
+    if (!spellCheck) {
+      return next(
+        res
+          .status(400)
+          .json({ message: "Spell doesn't exist, please check your data." }),
+      );
+    }
+  } catch (error) {
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+  try {
+    await Spell.deleteOne({ name: name });
+  } catch (error) {
+    return next(
+      res.status(500).json({
+        error: 'Server error occured while deleting spell, please try again.',
+      }),
+    );
+  }
+
+  return res.status(200).json({ message: 'Spell deleted successfully' });
 };
 
 export const characterFormData = async (req, res, next) => {
