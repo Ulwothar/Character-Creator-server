@@ -8,11 +8,13 @@ import {
   addSpell,
   addStat,
   add_Class,
+  delete_Class,
 } from '../../controllers/characterData/characterDataController';
 
 const router = express.Router();
 
 router.post('/add-class', check('name').notEmpty(), add_Class);
+router.delete('/delete-class', check('name').notEmpty(), delete_Class);
 
 router.post('/add-nature', check('name').notEmpty(), addNature);
 
@@ -62,6 +64,23 @@ export default router;
  *        description: New Class Created.
  *      '406':
  *        description: "Invalid inputs"
+ *      '500':
+ *        description: Internal server error.
+ *
+ * /characterdata/delete-class:
+ *  delete:
+ *    description: "Deletes selected class"
+ *    produces: "application/json"
+ *    parameters:
+ *    - in: "body"
+ *      schema:
+ *        name: "name"
+ *        description: "Name of the class"
+ *    responses:
+ *      '200':
+ *        description: "Class deleted"
+ *      '400':
+ *        description: "Class not found"
  *      '500':
  *        description: Internal server error.
  *
