@@ -43,6 +43,36 @@ export const add_Class = async (req, res, next) => {
   res.status(201).json({ class: newClass });
 };
 
+export const delete_Class = async (req, res, next) => {
+  const { name } = req.body;
+
+  try {
+    _classCheck = await _Class.findOne({ name: name });
+    if (!_classCheck) {
+      return next(
+        res
+          .status(400)
+          .json({ message: "Class doesn't exist, please check your data." }),
+      );
+    }
+  } catch (error) {
+    return next(
+      res.status(500).json({ error: 'Server error, please try again.' }),
+    );
+  }
+  try {
+    await _Class.deleteOne({ name: name });
+  } catch (error) {
+    return next(
+      res.status(500).json({
+        error: 'Server error occured while deleting class, please try again.',
+      }),
+    );
+  }
+
+  return res.status(200).json({ message: 'Class deleted successfully' });
+};
+
 export const addNature = async (req, res, next) => {
   const errors = validationResult(req);
 
