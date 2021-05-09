@@ -21,8 +21,18 @@ describe('Character endpoints test', function () {
   it('Adding new character', function (done) {
     request(app)
       .post('/character/')
-      .send(DUMMY_NEW_CHARACTER)
-      .expect('Content-Type', /json/)
+      .set('Content-Type', 'multipart/form-data')
+      .field('name', DUMMY_NEW_CHARACTER.name)
+      .field('race', DUMMY_NEW_CHARACTER.race)
+      .field('_class', DUMMY_NEW_CHARACTER._class)
+      .field('nature', DUMMY_NEW_CHARACTER.nature)
+      .field('gender', DUMMY_NEW_CHARACTER.gender)
+      .field('stats', DUMMY_NEW_CHARACTER.stats)
+      .field('skills', DUMMY_NEW_CHARACTER.skills)
+      .field('height', DUMMY_NEW_CHARACTER.height)
+      .field('weight', DUMMY_NEW_CHARACTER.weight)
+      .field('description', DUMMY_NEW_CHARACTER.description)
+      .field('spellsId', DUMMY_NEW_CHARACTER.spellsId)
       .expect(201)
       .then(function (response) {
         characterCode = response.body.character.characterCode;
@@ -81,8 +91,20 @@ describe('Character endpoints test', function () {
   it('Updating character', (done) => {
     request(app)
       .patch('/character/')
-      .send(DUMMY_UPDATED_CHARACTER)
-      .expect('Content-Type', /json/)
+      .set('Content-Type', 'multipart/form-data')
+      .field('name', DUMMY_UPDATED_CHARACTER.name)
+      .field('race', DUMMY_UPDATED_CHARACTER.race)
+      .field('_class', DUMMY_UPDATED_CHARACTER._class)
+      .field('nature', DUMMY_UPDATED_CHARACTER.nature)
+      .field('gender', DUMMY_UPDATED_CHARACTER.gender)
+      .field('stats', DUMMY_UPDATED_CHARACTER.stats)
+      .field('skills', DUMMY_UPDATED_CHARACTER.skills)
+      .field('height', DUMMY_UPDATED_CHARACTER.height)
+      .field('weight', DUMMY_UPDATED_CHARACTER.weight)
+      .field('description', DUMMY_UPDATED_CHARACTER.description)
+      .field('spellsId', DUMMY_UPDATED_CHARACTER.spellsId)
+      .field('characterCode', DUMMY_UPDATED_CHARACTER.characterCode)
+      .field('level', DUMMY_UPDATED_CHARACTER.level)
       .expect(200)
       .then((response) => {
         assertionSwitch = 'UpdateCharacter';
