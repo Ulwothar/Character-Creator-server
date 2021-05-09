@@ -5,12 +5,13 @@ export const DUMMY_NEW_CHARACTER = {
   race: 'Human',
   _class: 'Warrior',
   nature: 'Lawful',
-  skills: [],
-  stats: [{ strength: 5 }],
+  skills: '[]',
+  stats: '[{ strength: 5 }]',
   weight: 95,
   height: 180,
   description: 'Some dummy description',
-  spellsId: [],
+  spellsId: '[]',
+  gender: 'male',
 };
 
 export const DUMMY_WRONG_CHARACTER = {
@@ -32,12 +33,13 @@ export const DUMMY_UPDATED_CHARACTER = {
   characterCode: '',
   level: 3,
   nature: 'Lawful',
-  skills: [],
-  stats: [{ strength: 5 }],
+  skills: '[]',
+  stats: '[{ strength: 5 }]',
   weight: 95,
   height: 180,
   description: 'Another dummy description',
-  spellsId: [],
+  spellsId: '[]',
+  gender: 'male',
 };
 
 export const assertCheck = (character, characterCode, option) => {
@@ -74,7 +76,7 @@ export const assertCheck = (character, characterCode, option) => {
         'Wrong character stats',
       );
       assert(
-        character.skills[0] == DUMMY_NEW_CHARACTER.skills[0],
+        character.skills[0] == DUMMY_NEW_CHARACTER.skills,
         'Wrong character skills',
       );
       break;
@@ -115,7 +117,7 @@ export const assertCheck = (character, characterCode, option) => {
         'Wrong character stats',
       );
       assert(
-        character.skills[0] == DUMMY_UPDATED_CHARACTER.skills[0],
+        character.skills[0] == DUMMY_UPDATED_CHARACTER.skills,
         'Wrong character skills',
       );
       break;
@@ -152,7 +154,7 @@ export const assertCheck = (character, characterCode, option) => {
         'Wrong character stats',
       );
       assert(
-        character.skills[0] == DUMMY_NEW_CHARACTER.skills[0],
+        character.skills[0] == DUMMY_NEW_CHARACTER.skills,
         'Wrong character skills',
       );
       break;
