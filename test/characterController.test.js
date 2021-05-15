@@ -49,7 +49,7 @@ describe('Character endpoints test', function () {
       .post('/character/')
       .send(DUMMY_WRONG_CHARACTER)
       .expect('Content-Type', /json/)
-      .expect(406)
+      .expect(400)
       .then((response) => {
         assert(
           response.body.error ===
@@ -65,7 +65,8 @@ describe('Character endpoints test', function () {
       .get(`/character/specific/${characterCode}`)
       .expect(200)
       .expect((response) => {
-        let character = response.body.character[0];
+        let character = response.body.character;
+        console.log(character);
         assertionSwitch = 'GetCharacter';
         assertCheck(character, characterCode, assertionSwitch);
         done();
@@ -76,7 +77,7 @@ describe('Character endpoints test', function () {
   it('Getting character with wrong code', (done) => {
     request(app)
       .get(`/character/specific/${characterCode2}`)
-      .expect(404)
+      .expect(400)
       .then((response) => {
         assert(
           response.body.error ===
@@ -121,7 +122,7 @@ describe('Character endpoints test', function () {
       .patch('/character/')
       .send(DUMMY_UPDATED_CHARACTER)
       .expect('Content-Type', /json/)
-      .expect(404, done);
+      .expect(400, done);
   });
 
   it('Changing level of existing character', (done) => {
@@ -141,7 +142,7 @@ describe('Character endpoints test', function () {
     request(app)
       .patch('/character/level-up/')
       .send({ level: 10, characterCode: 'NonExistingCode' })
-      .expect(404)
+      .expect(400)
       .expect('Content-Type', /json/)
       .then((response) => {
         assert(
@@ -157,7 +158,7 @@ describe('Character endpoints test', function () {
     request(app)
       .patch('/character/level-up/')
       .send({ level: 'fifteen', characterCode: characterCode })
-      .expect(406)
+      .expect(400)
       .expect('Content-Type', /json/)
       .then((response) => {
         assert(
@@ -235,7 +236,7 @@ describe('Character endpoints test', function () {
     request(app)
       .delete(`/character/${characterCode2}`)
       .expect('Content-Type', /json/)
-      .expect(404)
+      .expect(400)
       .then((response) => {
         assert(
           response.body.error ===

@@ -30,6 +30,27 @@ const getCharacterInfo = (character) => {
   return getCharacterInfo;
 };
 
+const extractCharacterInfo = (character) => {
+  let getCharacterInfo = {};
+
+  console.log('loading character');
+  getCharacterInfo.name = character[0].name;
+  getCharacterInfo.race = character[0].race;
+  getCharacterInfo._class = character[0]._class;
+  getCharacterInfo.level = character[0].level;
+  getCharacterInfo.characterCode = character[0].characterCode;
+  getCharacterInfo.nature = character[0].nature;
+  getCharacterInfo.weight = character[0].weight;
+  getCharacterInfo.height = character[0].height;
+  getCharacterInfo.stats = character[0].stats;
+  getCharacterInfo.skills = character[0].skills;
+  getCharacterInfo.image = character[0].image;
+  getCharacterInfo.gender = character[0].gender;
+  getCharacterInfo.description = character[0].description;
+
+  return getCharacterInfo;
+};
+
 export const addCharacter = async (req, res, next) => {
   const errors = validationResult(req);
 
@@ -37,7 +58,7 @@ export const addCharacter = async (req, res, next) => {
 
   if (dataError) {
     return next(
-      res.status(406).json({
+      res.status(400).json({
         error: `Invalid inputs, please fill in the ${dataError} field.`,
       }),
     );
@@ -121,21 +142,25 @@ export const getCharacter = async (req, res, next) => {
 
   if (newCharacter.length === 0) {
     return next(
-      res.status(404).json({
+      res.status(400).send({
         error: `Character code is invalid, please make sure the code is typed properly.`,
       }),
     );
   }
 
-  console.log(
-    newCharacter.map((character) => character.toObject({ getters: true })),
-  );
+  // console.log(
+  //   newCharacter.map((character) => character.toObject({ getters: true })),
+  // );
 
-  res.status(200).json({
-    character: newCharacter.map((character) =>
-      character.toObject({ getters: true }),
-    ),
-  });
+  // res.status(200).send({
+  //   character: newCharacter.map((character) =>
+  //     character.toObject({ getters: true }),
+  //   ),
+  // });
+
+  let character = extractCharacterInfo(newCharacter);
+  console.log(character);
+  res.status(200).send({ character: character });
 };
 
 export const deleteCharacter = async (req, res, next) => {
@@ -146,7 +171,7 @@ export const deleteCharacter = async (req, res, next) => {
       characterCode: characterCode,
     });
     if (!characterCheck) {
-      return res.status(404).json({
+      return res.status(400).json({
         error: 'Character code is invalid, this character does not exist!',
       });
     }
@@ -173,7 +198,7 @@ export const updateCharacter = async (req, res, next) => {
 
   if (dataError) {
     return next(
-      res.status(406).json({
+      res.status(400).json({
         error: `Invalid inputs, please fill in the ${dataError} field.`,
       }),
     );
@@ -223,7 +248,7 @@ export const updateCharacter = async (req, res, next) => {
     let characterCheck = await Character.find({ characterCode: characterCode });
     if (characterCheck.length === 0) {
       return next(
-        res.status(404).json({
+        res.status(400).json({
           error: 'Character does not exist, please check your character Code',
         }),
       );
@@ -258,7 +283,7 @@ export const levelUp = async (req, res, next) => {
 
   if (dataError) {
     return next(
-      res.status(406).json({
+      res.status(400).json({
         error: `Invalid inputs, please fill in the ${dataError} field.`,
       }),
     );
@@ -278,7 +303,7 @@ export const levelUp = async (req, res, next) => {
     });
     if (!character) {
       return next(
-        res.status(404).json({
+        res.status(400).json({
           error: 'Could not find this character, please check your data',
         }),
       );
