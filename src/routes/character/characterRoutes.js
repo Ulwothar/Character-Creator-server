@@ -30,7 +30,7 @@ const fileFilter = (req, file, cb) => {
 
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     // Replace 'localhost:4000' with your domain name for production
-    req.body.image = `localhost:4000/images/characters/${file.originalname}`;
+    req.body.image = `http://cc.mattkrp.co.uk/images/characters/${file.originalname}`;
     console.log(req.body);
     cb(null, true);
   } else {
@@ -233,8 +233,9 @@ export default router;
 
 /**
  * @swagger
- * /character/{cc}:
+ * /character/specific/{cc}:
  *  get:
+ *    name: Get character by character code
  *    description: provides all data for specific character
  *    parameters:
  *      - name: cc
@@ -245,7 +246,7 @@ export default router;
  *    responses:
  *      '200':
  *        description: Loaded character data.
- *      '404':
+ *      '400':
  *        description: Character Code invalid.
  *      '500':
  *        description: Internal server error.
@@ -285,7 +286,7 @@ export default router;
  *    responses:
  *      '200':
  *        description: "Characters returned successfuly"
- *      '404':
+ *      '400':
  *        description: "Characters not found"
  *      '500':
  *        description: "Server error"
@@ -380,7 +381,7 @@ export default router;
  *    responses:
  *      '201':
  *        description: Character updated successfully!
- *      '406':
+ *      '400':
  *        description: Invalid inputs.
  *      '500':
  *        description: server error.
@@ -448,7 +449,7 @@ export default router;
  *    responses:
  *      '200':
  *        description: Character successfully deleted .
- *      '404':
+ *      '400':
  *        description: Character Code invalid.
  *      '500':
  *        description: Internal server error.
@@ -468,9 +469,7 @@ export default router;
  *    responses:
  *      '201':
  *        description: "Character level updated"
- *      '404':
- *        description: "Character does not exist"
- *      '406':
+ *      '400':
  *        description: "Invalid inputs, please fill in all required data"
  *      '500':
  *        description: "Server error, please try again"
@@ -502,7 +501,7 @@ export default router;
  *    responses:
  *      '201':
  *        description: "School added successfully"
- *      '406':
+ *      '400':
  *        description: "Invalid inputs"
  *      '500':
  *        description: "Server error"
