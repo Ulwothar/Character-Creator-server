@@ -283,7 +283,12 @@ export default router;
  *        type: string
  *    - in: "query"
  *      name: "aggregate"
- *      description: "Triggers if returned data should be grouped together. If anything is passed here, the value is 'true'"
+ *      description: "Triggers if returned data should be grouped together for statistic purposes. Returns data grouped by race, class, level, nature and name, and counts all returned characters. If anything is passed here, the value is 'true'"
+ *      schema:
+ *        type: boolean
+ *    - in: "query"
+ *      name: "groupCharacters"
+ *      description: "Returns all characters for which all query params are valid. There are only a few params available here, but anything can be passed as parameter and if those are valid, data wil be returned. If anything is passed here, the value is 'true'"
  *      schema:
  *        type: boolean
  *    responses:

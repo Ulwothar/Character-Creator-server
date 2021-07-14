@@ -319,28 +319,45 @@ export const levelUp = async (req, res, next) => {
 };
 
 export const getCharactersBy = async (req, res, next) => {
-  let { race, _class, level, nature, aggregate } = req.query;
-
+  let queryParams = req.query;
   let characters = [];
+  let charactersByQuery = [];
   let dbQuery;
-  if (race) {
-    race = race.charAt(0).toUpperCase() + race.slice(1);
+  let myQuery = {};
+  const queryLength = Object.keys(queryParams).length;
+
+  // Iterate through query params and change every first letter to uppercase (that's how we store it in database)
+  Object.entries(req.query).forEach(([key, value]) => {
+    if (key !== 'aggregate' && key !== 'groupCharacters') {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+      myQuery[key] = value;
+    }
+  });
+  const { aggregate, groupCharacters } = req.query;
+  const { race, _class, level, nature } = myQuery;
+
+  // Find and return all characters with all params valid
+  if (!aggregate && groupCharacters) {
+    try {
+      dbQuery = await Character.find(myQuery);
+      if (dbQuery.length === 0) {
+        dbQuery = {
+          error: `There are no characters with selected parameters.`,
+        };
+      }
+      charactersByQuery.push({
+        allMatchingCharacters: dbQuery,
+        count: dbQuery.length,
+      });
+    } catch (error) {
+      return next(res.status(500).json({ error: error }));
+    }
+    return res.status(200).json({ characters: charactersByQuery });
   }
 
-  if (_class) {
-    _class = _class.charAt(0).toUpperCase() + _class.slice(1);
-  }
-
-  if (nature) {
-    nature = nature.charAt(0).toUpperCase() + nature.slice(1);
-  }
-
-  if (level) {
-    level = parseInt(level);
-  }
-
-  if (!aggregate) {
-    if (!race && !_class && !level && !nature) {
+  //Return sets of characters for every single query param passed
+  if (!aggregate && !groupCharacters) {
+    if (queryLength === 0) {
       try {
         characters = await Character.find();
       } catch (error) {
@@ -402,6 +419,7 @@ export const getCharactersBy = async (req, res, next) => {
     return res.status(200).json({ characters: characters });
   }
 
+  //Returns aggregated set of data for all characters in database
   if (!race && !_class && !nature && !level) {
     characters = await Character.aggregate([
       {
@@ -430,6 +448,7 @@ export const getCharactersBy = async (req, res, next) => {
     return res.status(200).json({ characters: characters });
   }
 
+  //Returns agregated set of data for characters with selected parameters
   characters = await Character.aggregate([
     {
       $match: {
