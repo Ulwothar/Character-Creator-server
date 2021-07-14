@@ -1,6 +1,7 @@
 import express from 'express';
 import { check } from 'express-validator';
 import multer from 'multer';
+import { characterFormData } from '../../controllers/characterData/characterDataController';
 
 import {
   addCharacter,
@@ -94,6 +95,8 @@ router.post('/upload', upload.single('upload'), (req, res) => {
   console.log(req.file);
   res.send();
 });
+
+router.get('/form', characterFormData);
 
 //Deactivated due to changes made in character model. Not deleting, because this section will need to be discussed.
 // router.patch(
@@ -515,4 +518,14 @@ export default router;
  *        type: string
  *      characterCode:
  *        type: string
+ *
+ * @swagger
+ * /character/form:
+ *  get:
+ *      description: shows form data required for creating and updating characters
+ *      responses:
+ *          '200':
+ *              description: Loaded character form data
+ *          '500':
+ *              description: Internal server error, please try again
  */

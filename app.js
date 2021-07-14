@@ -5,7 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import characterRoutes from './src/routes/character/characterRoutes';
 import characterDataRoutes from './src/routes/character/characterDataRoutes';
-import formData from './src/routes/formData/formData';
+// import formData from './src/routes/formData/formData';
 import swaggerConfig from './src/shared/swaggerConfig';
 
 dotenv.config();
@@ -41,7 +41,7 @@ app.use('/character', characterRoutes);
 
 app.use('/characterdata', characterDataRoutes);
 
-app.use('/formdata', formData);
+// app.use('/formdata', formData);
 
 app.get('/', (req, res) => {
   res.send('Welcome to Character Creator API');
