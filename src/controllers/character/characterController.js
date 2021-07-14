@@ -159,7 +159,6 @@ export const getCharacter = async (req, res, next) => {
   // });
 
   let character = extractCharacterInfo(newCharacter);
-  console.log(character);
   res.status(200).send({ character: character });
 };
 
@@ -308,7 +307,6 @@ export const levelUp = async (req, res, next) => {
         }),
       );
     }
-    console.log(character);
   } catch (error) {
     return next(
       res.status(500).json({ error: 'Server error, please try again.' }),
@@ -321,16 +319,18 @@ export const levelUp = async (req, res, next) => {
 export const getCharactersBy = async (req, res, next) => {
   let queryParams = req.query;
   let characters = [];
-  let charactersByQuery = [];
   let dbQuery;
   let myQuery = {};
   const queryLength = Object.keys(queryParams).length;
 
   // Iterate through query params and change every first letter to uppercase (that's how we store it in database)
   Object.entries(req.query).forEach(([key, value]) => {
-    if (key !== 'aggregate' && key !== 'groupCharacters') {
+    if (key !== 'aggregate' && key !== 'groupCharacters' && key !== 'level') {
       value = value.charAt(0).toUpperCase() + value.slice(1);
       myQuery[key] = value;
+    }
+    if (key === 'level') {
+      myQuery[key] = parseInt(value);
     }
   });
   const { aggregate, groupCharacters } = req.query;
@@ -345,14 +345,10 @@ export const getCharactersBy = async (req, res, next) => {
           error: `There are no characters with selected parameters.`,
         };
       }
-      charactersByQuery.push({
-        allMatchingCharacters: dbQuery,
-        count: dbQuery.length,
-      });
     } catch (error) {
       return next(res.status(500).json({ error: error }));
     }
-    return res.status(200).json({ characters: charactersByQuery });
+    return res.status(200).json({ characters: dbQuery, count: dbQuery.length });
   }
 
   //Return sets of characters for every single query param passed
@@ -448,7 +444,9 @@ export const getCharactersBy = async (req, res, next) => {
     return res.status(200).json({ characters: characters });
   }
 
-  //Returns agregated set of data for characters with selected parameters
+  //Returns aggregated set of data for characters with selected parameters
+
+  console.log({ race: race, _class: _class, level: level, nature: nature });
   characters = await Character.aggregate([
     {
       $match: {
@@ -463,7 +461,7 @@ export const getCharactersBy = async (req, res, next) => {
             $or: [nature ? { nature: nature } : { nature: { $ne: nature } }],
           },
           {
-            $or: [level ? { level: level } : { level: { $gt: 0 } }],
+            $or: [level ? { level: level } : { level: { $ne: 0 } }],
           },
         ],
       },
@@ -489,7 +487,7 @@ export const getCharactersBy = async (req, res, next) => {
       console.log(err);
       return next(res.status(500).json({ error: 'Server error.' }));
     });
-
+  console.log(characters);
   if (characters.length === 0) {
     return next(
       res
