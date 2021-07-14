@@ -334,10 +334,28 @@ export const getCharactersBy = async (req, res, next) => {
     }
   });
   const { aggregate, groupCharacters } = req.query;
-  const { race, _class, level, nature } = myQuery;
+  const { race, _class, level, nature, characterCode } = myQuery;
+
+  if (characterCode) {
+    try {
+      characters = await Character.find({ characterCode: characterCode });
+      if (characters.length === 0) {
+        return res
+          .status(404)
+          .json({ error: 'Character with this code does not exist.' });
+      }
+    } catch (error) {
+      return next(
+        res.status(404).json({
+          error: 'Character not found, please check your characterCode',
+        }),
+      );
+    }
+    return res.status(200).json({ character: characters });
+  }
 
   // Find and return all characters with all params valid
-  if (!aggregate && groupCharacters) {
+  if (!aggregate) {
     try {
       dbQuery = await Character.find(myQuery);
       if (dbQuery.length === 0) {
@@ -352,68 +370,68 @@ export const getCharactersBy = async (req, res, next) => {
   }
 
   //Return sets of characters for every single query param passed
-  if (!aggregate && !groupCharacters) {
-    if (queryLength === 0) {
-      try {
-        characters = await Character.find();
-      } catch (error) {
-        return next(res.status(500).json({ characters: characters }));
-      }
-    }
+  // if (!aggregate && !groupCharacters) {
+  //   if (queryLength === 0) {
+  //     try {
+  //       characters = await Character.find();
+  //     } catch (error) {
+  //       return next(res.status(500).json({ characters: characters }));
+  //     }
+  //   }
 
-    if (race) {
-      try {
-        dbQuery = await Character.find({ race: race });
-        if (dbQuery.length === 0) {
-          dbQuery = { error: `There are no characters with ${race} race.` };
-        }
-        characters.push({ byRace: dbQuery, count: dbQuery.length });
-      } catch (error) {
-        return next(res.status(500).json({ error: 'Server error.' }));
-      }
-    }
+  //   if (race) {
+  //     try {
+  //       dbQuery = await Character.find({ race: race });
+  //       if (dbQuery.length === 0) {
+  //         dbQuery = { error: `There are no characters with ${race} race.` };
+  //       }
+  //       characters.push({ byRace: dbQuery, count: dbQuery.length });
+  //     } catch (error) {
+  //       return next(res.status(500).json({ error: 'Server error.' }));
+  //     }
+  //   }
 
-    if (_class) {
-      try {
-        dbQuery = await Character.find({ _class: _class });
-        if (dbQuery.length === 0) {
-          dbQuery = { error: `There are no characters with ${_class} class.` };
-        }
-        characters.push({ byClass: dbQuery, count: dbQuery.length });
-      } catch (error) {
-        return next(res.status(500).json({ error: 'Server error.' }));
-      }
-    }
+  //   if (_class) {
+  //     try {
+  //       dbQuery = await Character.find({ _class: _class });
+  //       if (dbQuery.length === 0) {
+  //         dbQuery = { error: `There are no characters with ${_class} class.` };
+  //       }
+  //       characters.push({ byClass: dbQuery, count: dbQuery.length });
+  //     } catch (error) {
+  //       return next(res.status(500).json({ error: 'Server error.' }));
+  //     }
+  //   }
 
-    if (level) {
-      try {
-        dbQuery = await Character.find({ level: level });
-        if (dbQuery.length === 0) {
-          dbQuery = { error: `There are no characters with ${level} level.` };
-        }
-        characters.push({ byLevel: dbQuery, count: dbQuery.length });
-      } catch (error) {
-        return next(res.status(500).json({ error: 'Server error.' }));
-      }
-    }
+  //   if (level) {
+  //     try {
+  //       dbQuery = await Character.find({ level: level });
+  //       if (dbQuery.length === 0) {
+  //         dbQuery = { error: `There are no characters with ${level} level.` };
+  //       }
+  //       characters.push({ byLevel: dbQuery, count: dbQuery.length });
+  //     } catch (error) {
+  //       return next(res.status(500).json({ error: 'Server error.' }));
+  //     }
+  //   }
 
-    if (nature) {
-      try {
-        dbQuery = await Character.find({ nature: nature });
-        if (dbQuery.length === 0) {
-          dbQuery = { error: `There are no characters with ${nature} nature.` };
-        }
-        characters[characters.length] = {
-          byNature: dbQuery,
-          count: dbQuery.length,
-        };
-      } catch (error) {
-        return next(res.status(500).json({ error: 'Server error.' }));
-      }
-    }
+  //   if (nature) {
+  //     try {
+  //       dbQuery = await Character.find({ nature: nature });
+  //       if (dbQuery.length === 0) {
+  //         dbQuery = { error: `There are no characters with ${nature} nature.` };
+  //       }
+  //       characters[characters.length] = {
+  //         byNature: dbQuery,
+  //         count: dbQuery.length,
+  //       };
+  //     } catch (error) {
+  //       return next(res.status(500).json({ error: 'Server error.' }));
+  //     }
+  //   }
 
-    return res.status(200).json({ characters: characters });
-  }
+  //   return res.status(200).json({ characters: characters });
+  // }
 
   //Returns aggregated set of data for all characters in database
   if (!race && !_class && !nature && !level) {
@@ -445,8 +463,6 @@ export const getCharactersBy = async (req, res, next) => {
   }
 
   //Returns aggregated set of data for characters with selected parameters
-
-  console.log({ race: race, _class: _class, level: level, nature: nature });
   characters = await Character.aggregate([
     {
       $match: {
@@ -480,14 +496,12 @@ export const getCharactersBy = async (req, res, next) => {
   ])
     .exec()
     .then((res) => {
-      console.log(res);
       return res;
     })
     .catch((err) => {
       console.log(err);
       return next(res.status(500).json({ error: 'Server error.' }));
     });
-  console.log(characters);
   if (characters.length === 0) {
     return next(
       res

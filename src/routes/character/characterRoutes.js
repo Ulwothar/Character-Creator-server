@@ -63,7 +63,7 @@ router.post(
 
 // cc - characterCode!
 
-router.get('/specific/:cc', getCharacter);
+// router.get('/specific/:cc', getCharacter);
 
 router.patch(
   '/',
@@ -89,7 +89,7 @@ router.patch(
   levelUp,
 );
 
-router.get('/characterstats', getCharactersBy);
+router.get('/', getCharactersBy);
 
 router.post('/upload', upload.single('upload'), (req, res) => {
   console.log(req.file);
@@ -112,7 +112,7 @@ export default router;
 /**
  * @swagger
  *
- * /character:
+ * /characters:
  *   post:
  *    description: "Use to create a new character"
  *    consumes:
@@ -236,31 +236,15 @@ export default router;
 
 /**
  * @swagger
- * /character/specific/{cc}:
- *  get:
- *    name: Get character by character code
- *    description: provides all data for specific character
- *    parameters:
- *      - name: cc
- *        in: path
- *        description: Character Code
- *        required: true
- *        type: string
- *    responses:
- *      '200':
- *        description: Loaded character data.
- *      '400':
- *        description: Character Code invalid.
- *      '500':
- *        description: Internal server error.
- */
-
-/**
- * @swagger
- * /character/characterstats:
+ * /characters/:
  *  get:
  *    description: "Returns lists of characters grouped in provided categories. No query parameter added - returns all characters. If race, _class, level or nature are added to query, it will retrn all characters with specified stats."
  *    parameters:
+ *    - in: "query"
+ *      name: "characterCode"
+ *      description: "Returns one specific character. If characterCode is sent, no other characters will be shown, even if more params were added."
+ *      schema:
+ *        type: string
  *    - in: "query"
  *      name: "race"
  *      description: "Returns all characters with specified race"
@@ -273,7 +257,7 @@ export default router;
  *        type: string
  *    - in: "query"
  *      name: "level"
- *      description: "Returns all characters with specified race"
+ *      description: "Returns all characters with specified level"
  *      schema:
  *        type: number
  *    - in: "query"
@@ -284,11 +268,6 @@ export default router;
  *    - in: "query"
  *      name: "aggregate"
  *      description: "Triggers if returned data should be grouped together for statistic purposes. Returns data grouped by race, class, level, nature and name, and counts all returned characters. If anything is passed here, the value is 'true'"
- *      schema:
- *        type: boolean
- *    - in: "query"
- *      name: "groupCharacters"
- *      description: "Returns all characters for which all query params are valid. There are only a few params available here, but anything can be passed as parameter and if those are valid, data wil be returned. If anything is passed here, the value is 'true'"
  *      schema:
  *        type: boolean
  *    responses:
@@ -304,7 +283,7 @@ export default router;
 /**
  * @swagger
  *
- * /character:
+ * /characters:
  *   patch:
  *    description: "Use to update an existing character"
  *    consumes:
@@ -445,7 +424,7 @@ export default router;
 
 /**
  * @swagger
- * /character/{cc}:
+ * /characters/{cc}:
  *  delete:
  *    description: Deletes a specific character
  *    parameters:
@@ -465,7 +444,7 @@ export default router;
 
 /**
  * @swagger
- * /character/level-up:
+ * /characters/level-up:
  *  patch:
  *    description: "Updates character level"
  *    parameters:
@@ -525,7 +504,7 @@ export default router;
  *        type: string
  *
  * @swagger
- * /character/form:
+ * /characters/form:
  *  get:
  *      description: shows form data required for creating and updating characters
  *      responses:
