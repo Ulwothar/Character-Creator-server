@@ -10,7 +10,7 @@ const characterSchema = new Schema({
   level: { type: Number, required: true },
   stats: { type: Array, required: true },
   skills: { type: Array, required: true },
-  nature: { type: String, required: true },
+  alignment: { type: String, required: true },
   gender: { type: String, default: 'male', required: true },
   image: { type: String, default: 'Route to some default image' }, //If there is a specified default image for all characters, place it here
   weight: { type: Number, default: 0 },

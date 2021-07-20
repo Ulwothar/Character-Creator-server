@@ -4,9 +4,17 @@ const Schema = mongoose.Schema;
 
 const raceSchema = new Schema({
   name: { type: String, required: true },
-  description: { type: String, required: true },
-  specialRules: { type: String, required: true },
-  psychologicalTraits: { type: String, required: true },
+  description: {
+    type: String,
+    required: true,
+    default: 'Some default description',
+  },
+  specialRules: { type: String, required: true, default: 'Some default rule' },
+  psychologicalTraits: {
+    type: String,
+    required: true,
+    default: 'Some default trait',
+  },
   modifiers: { type: Array },
 });
 

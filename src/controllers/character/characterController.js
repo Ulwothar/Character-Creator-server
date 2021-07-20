@@ -18,7 +18,7 @@ const getCharacterInfo = (character) => {
   getCharacterInfo.class = character._class;
   getCharacterInfo.level = character.level;
   getCharacterInfo.characterCode = character.characterCode;
-  getCharacterInfo.nature = character.nature;
+  getCharacterInfo.alignment = character.alignment;
   getCharacterInfo.weight = character.weight;
   getCharacterInfo.height = character.height;
   getCharacterInfo.stats = character.stats;
@@ -39,7 +39,7 @@ const extractCharacterInfo = (character) => {
   getCharacterInfo._class = character[0]._class;
   getCharacterInfo.level = character[0].level;
   getCharacterInfo.characterCode = character[0].characterCode;
-  getCharacterInfo.nature = character[0].nature;
+  getCharacterInfo.alignment = character[0].alignment;
   getCharacterInfo.weight = character[0].weight;
   getCharacterInfo.height = character[0].height;
   getCharacterInfo.stats = character[0].stats;
@@ -69,7 +69,7 @@ export const addCharacter = async (req, res, next) => {
     name,
     _class,
     race,
-    nature,
+    alignment,
     gender,
     spellsId,
     weight,
@@ -102,7 +102,7 @@ export const addCharacter = async (req, res, next) => {
     _class,
     characterCode,
     level,
-    nature,
+    alignment,
     gender,
     skills,
     stats,
@@ -207,7 +207,7 @@ export const updateCharacter = async (req, res, next) => {
     name,
     _class,
     race,
-    nature,
+    alignment,
     skills,
     stats,
     level,
@@ -232,7 +232,7 @@ export const updateCharacter = async (req, res, next) => {
     name: name,
     _class: _class,
     race: race,
-    nature: nature,
+    alignment: alignment,
     skills: skills,
     stats: stats,
     level: level,
@@ -334,7 +334,7 @@ export const getCharactersBy = async (req, res, next) => {
     }
   });
   const { aggregate, groupCharacters } = req.query;
-  const { race, _class, level, nature, characterCode } = myQuery;
+  const { race, _class, level, alignment, characterCode } = myQuery;
 
   if (characterCode) {
     try {
@@ -415,11 +415,11 @@ export const getCharactersBy = async (req, res, next) => {
   //     }
   //   }
 
-  //   if (nature) {
+  //   if (alignment) {
   //     try {
-  //       dbQuery = await Character.find({ nature: nature });
+  //       dbQuery = await Character.find({ alignment: alignment });
   //       if (dbQuery.length === 0) {
-  //         dbQuery = { error: `There are no characters with ${nature} nature.` };
+  //         dbQuery = { error: `There are no characters with ${alignment} alignment.` };
   //       }
   //       characters[characters.length] = {
   //         byNature: dbQuery,
@@ -434,7 +434,7 @@ export const getCharactersBy = async (req, res, next) => {
   // }
 
   //Returns aggregated set of data for all characters in database
-  if (!race && !_class && !nature && !level) {
+  if (!race && !_class && !alignment && !level) {
     characters = await Character.aggregate([
       {
         $match: { level: { $gte: 0 } },
@@ -474,7 +474,11 @@ export const getCharactersBy = async (req, res, next) => {
             $or: [_class ? { _class: _class } : { _class: { $ne: _class } }],
           },
           {
-            $or: [nature ? { nature: nature } : { nature: { $ne: nature } }],
+            $or: [
+              alignment
+                ? { alignment: alignment }
+                : { alignment: { $ne: alignment } },
+            ],
           },
           {
             $or: [level ? { level: level } : { level: { $ne: 0 } }],
@@ -488,7 +492,7 @@ export const getCharactersBy = async (req, res, next) => {
         race: { $addToSet: '$race' },
         _class: { $addToSet: '$_class' },
         level: { $addToSet: '$level' },
-        nature: { $addToSet: '$nature' },
+        alignment: { $addToSet: '$alignment' },
         name: { $addToSet: '$name' },
         count: { $sum: 1 },
       },

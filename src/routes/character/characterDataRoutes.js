@@ -22,8 +22,8 @@ const router = express.Router();
 router.post('/add-class', check('name').notEmpty(), add_Class);
 router.delete('/delete-class', check('name').notEmpty(), delete_Class);
 
-router.post('/add-nature', check('name').notEmpty(), addNature);
-router.delete('/delete-nature', check('name').notEmpty(), deleteNature);
+router.post('/add-alignment', check('name').notEmpty(), addNature);
+router.delete('/delete-alignment', check('name').notEmpty(), deleteNature);
 
 router.post(
   '/add-race',
@@ -97,32 +97,32 @@ export default router;
  *      '500':
  *        description: "Internal server error"
  *
- * /characterdata/add-nature:
+ * /characterdata/add-alignment:
  *  post:
- *    description: "Creates new nature"
+ *    description: "Creates new alignment"
  *    produces: "application/json"
  *    parameters:
  *    - in: "body"
  *      name: "Nature"
- *      description: "Creates new nature"
+ *      description: "Creates new alignment"
  *      schema:
- *        $ref: '#/definitions/nature'
+ *        $ref: '#/definitions/alignment'
  *    responses:
  *      '201':
- *        description: New nature Created.
+ *        description: New alignment Created.
  *      '406':
  *        description: "Invalid inputs"
  *      '500':
  *        description: Internal server error.
  *
- * /characterdata/delete-nature:
+ * /characterdata/delete-alignment:
  *  delete:
- *    description: "Deletes selected nature"
+ *    description: "Deletes selected alignment"
  *    produces: "application/json"
  *    parameters:
  *    - in: "body"
  *      name: "Spell"
- *      description: "Deletes a nature"
+ *      description: "Deletes a alignment"
  *      schema:
  *        $ref: '#/definitions/delete'
  *    responses:
@@ -339,7 +339,7 @@ export default router;
  *      psychologicalTraits:
  *          type: string
  *
- *  nature:
+ *  alignment:
  *   type: object
  *   properties:
  *     name:

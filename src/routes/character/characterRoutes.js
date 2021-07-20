@@ -54,7 +54,7 @@ router.post(
   check('race').notEmpty(),
   check('_class').notEmpty(),
   check('name').notEmpty(),
-  check('nature').notEmpty(),
+  check('alignment').notEmpty(),
   check('stats').exists(),
   check('skills').exists(),
   check('gender').notEmpty(),
@@ -71,7 +71,7 @@ router.patch(
   check('race').notEmpty(),
   check('_class').notEmpty(),
   check('name').notEmpty(),
-  check('nature').notEmpty(),
+  check('alignment').notEmpty(),
   check('stats').exists(),
   check('skills').exists(),
   check('characterCode').notEmpty(),
@@ -145,7 +145,7 @@ export default router;
  *      required: true
  *      description: "Class of the character"
  *    - in: "formData"
- *      name: "nature"
+ *      name: "alignment"
  *      type: string
  *      required: true
  *      description: "Nature of the character"
@@ -201,7 +201,7 @@ export default router;
  *        type: string
  *      _class:
  *        type: string
- *      nature:
+ *      alignment:
  *        type: string
  *      gender:
  *        type: string
@@ -227,7 +227,7 @@ export default router;
  *      - name
  *      - _class
  *      - race
- *      - nature
+ *      - alignment
  *      - gender
  *      - stats
  *      - skills
@@ -238,7 +238,7 @@ export default router;
  * @swagger
  * /characters/:
  *  get:
- *    description: "Returns lists of characters grouped in provided categories. No query parameter added - returns all characters. If race, _class, level or nature are added to query, it will retrn all characters with specified stats."
+ *    description: "Returns lists of characters grouped in provided categories. No query parameter added - returns all characters. If race, _class, level or alignment are added to query, it will retrn all characters with specified stats."
  *    parameters:
  *    - in: "query"
  *      name: "characterCode"
@@ -261,13 +261,13 @@ export default router;
  *      schema:
  *        type: number
  *    - in: "query"
- *      name: "nature"
- *      description: "Returns all characters with specified nature"
+ *      name: "alignment"
+ *      description: "Returns all characters with specified alignment"
  *      schema:
  *        type: string
  *    - in: "query"
  *      name: "aggregate"
- *      description: "Triggers if returned data should be grouped together for statistic purposes. Returns data grouped by race, class, level, nature and name, and counts all returned characters. If anything is passed here, the value is 'true'"
+ *      description: "Triggers if returned data should be grouped together for statistic purposes. Returns data grouped by race, class, level, alignment and name, and counts all returned characters. If anything is passed here, the value is 'true'"
  *      schema:
  *        type: boolean
  *    responses:
@@ -321,7 +321,7 @@ export default router;
  *      required: true
  *      description: "Class of the character"
  *    - in: "formData"
- *      name: "nature"
+ *      name: "alignment"
  *      type: string
  *      required: true
  *      description: "Nature of the character"
@@ -382,7 +382,7 @@ export default router;
  *        type: string
  *      _class:
  *        type: string
- *      nature:
+ *      alignment:
  *        type: string
  *      gender:
  *        type: string
@@ -413,7 +413,7 @@ export default router;
  *      - name
  *      - _class
  *      - race
- *      - nature
+ *      - alignment
  *      - gender
  *      - stats
  *      - skills

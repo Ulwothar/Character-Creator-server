@@ -1,7 +1,7 @@
 import { validationResult } from 'express-validator';
 
 import _Class from '../../models/_classes/_classModel';
-import Nature from '../../models/natures/natureModel';
+import Alignment from '../../models/natures/natureModel';
 import Race from '../../models/races/raceModel';
 import Skill from '../../models/skills/skillModel';
 import Stat from '../../models/stats/statModel';
@@ -88,7 +88,7 @@ export const addNature = async (req, res, next) => {
 
   const { name, modifiers } = req.body;
 
-  const newNature = new Nature({
+  const newNature = new Alignment({
     name,
     modifiers,
   });
@@ -111,12 +111,12 @@ export const deleteNature = async (req, res, next) => {
   const { name } = req.body;
 
   try {
-    let natureCheck = await Nature.findOne({ name: name });
+    let natureCheck = await Alignment.findOne({ name: name });
     if (!natureCheck) {
       return next(
-        res
-          .status(400)
-          .json({ message: "Nature doesn't exist, please check your data." }),
+        res.status(400).json({
+          message: "Alignment doesn't exist, please check your data.",
+        }),
       );
     }
   } catch (error) {
@@ -150,13 +150,8 @@ export const addRace = async (req, res, next) => {
     );
   }
 
-  const {
-    name,
-    modifiers,
-    description,
-    specialRules,
-    psychologicalTraits,
-  } = req.body;
+  const { name, modifiers, description, specialRules, psychologicalTraits } =
+    req.body;
 
   const newRace = new Race({
     name,
@@ -495,7 +490,7 @@ export const characterFormData = async (req, res, next) => {
   let new_Class, newNature, newRace, newSkill, newStat, newSchool, newSpell;
   try {
     new_Class = await _Class.find({});
-    newNature = await Nature.find({});
+    newNature = await Alignment.find({});
     newRace = await Race.find({});
     newSkill = await Skill.find({});
     newStat = await Stat.find({});
@@ -510,7 +505,7 @@ export const characterFormData = async (req, res, next) => {
 
   res.status(200).json({
     classes: new_Class,
-    natures: newNature,
+    alignments: newNature,
     races: newRace,
     skills: newSkill,
     stats: newStat,
