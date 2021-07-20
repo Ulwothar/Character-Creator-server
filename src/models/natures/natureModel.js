@@ -2,8 +2,13 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const natureSchema = new Schema({
+const alignmentSchema = new Schema({
   name: { type: String, required: true },
+  description: {
+    type: String,
+    required: true,
+    default: 'Some default description',
+  },
 });
 
-export default mongoose.model('Nature', natureSchema);
+export default mongoose.model('Alignment', alignmentSchema);
