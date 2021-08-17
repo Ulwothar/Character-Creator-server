@@ -1,7 +1,8 @@
 import { validationResult } from 'express-validator';
 
 import Character from '../../models/character/characterModel';
-import ValidateData from '../../shared/dataValidator';
+import ValidateData, { ValidateResource } from '../../shared/dataValidator';
+import switchToUpperCase from '../../shared/switchToUpperCase';
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -63,7 +64,30 @@ export const addCharacter = async (req, res, next) => {
       }),
     );
   }
-  console.log(req.body.image);
+
+  // let checkResource = null;
+  let resourceChecked;
+  const checkResource = () => {
+    Object.entries(req.body).forEach(async ([key, value]) => {
+      let databaseValidationResult = await ValidateResource(key, value);
+      if (databaseValidationResult !== null) {
+        resourceChecked = databaseValidationResult;
+      }
+    });
+  };
+  try {
+    await checkResource();
+    if (resourceChecked) {
+      return res.status(406).json({ resourceChecked });
+    }
+  } catch (error) {
+    return res.status(406).json({ error: error });
+  }
+
+  console.log(resourceChecked);
+  setTimeout(() => {
+    console.log(resourceChecked);
+  }, 5000);
 
   const {
     name,
@@ -90,7 +114,7 @@ export const addCharacter = async (req, res, next) => {
 
   const level = 1;
 
-  let someImage = image;
+  // let someImage = image;
 
   const cName = name.slice(0, 4);
   const code = getRandomInt(10000, 100000);
@@ -321,22 +345,29 @@ export const getCharactersBy = async (req, res, next) => {
   let characters = [];
   let dbQuery;
   let myQuery = {};
-  const queryLength = Object.keys(queryParams).length;
+  const queryLength = Object.keys(req.query).length;
 
   // Iterate through query params and change every first letter to uppercase (that's how we store it in database)
   Object.entries(req.query).forEach(([key, value]) => {
     if (key !== 'aggregate' && key !== 'groupCharacters' && key !== 'level') {
-      value = value.charAt(0).toUpperCase() + value.slice(1);
+      // value = value.charAt(0).toUpperCase() + value.slice(1);
+      value = switchToUpperCase(value);
       myQuery[key] = value;
     }
     if (key === 'level') {
       myQuery[key] = parseInt(value);
     }
   });
-  const { aggregate, groupCharacters } = req.query;
+  const { aggregate, all } = req.query;
   const { race, _class, level, alignment, characterCode } = myQuery;
-
+  let characterCodeLength = 0;
   if (characterCode) {
+    if (characterCode.length > 0) {
+      characterCodeLength = characterCode.length;
+    }
+  }
+  console.log(characterCodeLength);
+  if (characterCode && characterCodeLength > 1) {
     try {
       characters = await Character.find({ characterCode: characterCode });
       if (characters.length === 0) {
@@ -354,14 +385,20 @@ export const getCharactersBy = async (req, res, next) => {
     return res.status(200).json({ character: characters });
   }
 
+  if (queryLength === 0 || (characterCode && characterCodeLength === 0)) {
+    return res
+      .status(404)
+      .json({ error: 'No data passed, please specify your query' });
+  }
+
   // Find and return all characters with all params valid
-  if (!aggregate) {
+  if (!aggregate && !all) {
     try {
       dbQuery = await Character.find(myQuery);
       if (dbQuery.length === 0) {
-        dbQuery = {
-          error: `There are no characters with selected parameters.`,
-        };
+        return res
+          .status(404)
+          .json({ error: `There are no characters with selected parameters.` });
       }
     } catch (error) {
       return next(res.status(500).json({ error: error }));
@@ -369,69 +406,18 @@ export const getCharactersBy = async (req, res, next) => {
     return res.status(200).json({ characters: dbQuery, count: dbQuery.length });
   }
 
-  //Return sets of characters for every single query param passed
-  // if (!aggregate && !groupCharacters) {
-  //   if (queryLength === 0) {
-  //     try {
-  //       characters = await Character.find();
-  //     } catch (error) {
-  //       return next(res.status(500).json({ characters: characters }));
-  //     }
-  //   }
+  if (all && !aggregate) {
+    try {
+      characters = await Character.find();
+      if (characters.length === 0) {
+        return res.status(404).json({ error: 'No characters found.' });
+      }
+    } catch (error) {
+      return res.status(500).json({ error: 'Server error, please try again.' });
+    }
 
-  //   if (race) {
-  //     try {
-  //       dbQuery = await Character.find({ race: race });
-  //       if (dbQuery.length === 0) {
-  //         dbQuery = { error: `There are no characters with ${race} race.` };
-  //       }
-  //       characters.push({ byRace: dbQuery, count: dbQuery.length });
-  //     } catch (error) {
-  //       return next(res.status(500).json({ error: 'Server error.' }));
-  //     }
-  //   }
-
-  //   if (_class) {
-  //     try {
-  //       dbQuery = await Character.find({ _class: _class });
-  //       if (dbQuery.length === 0) {
-  //         dbQuery = { error: `There are no characters with ${_class} class.` };
-  //       }
-  //       characters.push({ byClass: dbQuery, count: dbQuery.length });
-  //     } catch (error) {
-  //       return next(res.status(500).json({ error: 'Server error.' }));
-  //     }
-  //   }
-
-  //   if (level) {
-  //     try {
-  //       dbQuery = await Character.find({ level: level });
-  //       if (dbQuery.length === 0) {
-  //         dbQuery = { error: `There are no characters with ${level} level.` };
-  //       }
-  //       characters.push({ byLevel: dbQuery, count: dbQuery.length });
-  //     } catch (error) {
-  //       return next(res.status(500).json({ error: 'Server error.' }));
-  //     }
-  //   }
-
-  //   if (alignment) {
-  //     try {
-  //       dbQuery = await Character.find({ alignment: alignment });
-  //       if (dbQuery.length === 0) {
-  //         dbQuery = { error: `There are no characters with ${alignment} alignment.` };
-  //       }
-  //       characters[characters.length] = {
-  //         byNature: dbQuery,
-  //         count: dbQuery.length,
-  //       };
-  //     } catch (error) {
-  //       return next(res.status(500).json({ error: 'Server error.' }));
-  //     }
-  //   }
-
-  //   return res.status(200).json({ characters: characters });
-  // }
+    return res.status(200).json({ characters: characters });
+  }
 
   //Returns aggregated set of data for all characters in database
   if (!race && !_class && !alignment && !level) {
